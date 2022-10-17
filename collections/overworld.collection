@@ -1,0 +1,105 @@
+name: "collection_overworld"
+instances {
+  id: "camera_overworld"
+  prototype: "/rendercam/camera.go"
+  position {
+    x: 202.0
+    y: 118.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  component_properties {
+    id: "script"
+    properties {
+      id: "fixedAspectRatio"
+      value: "true"
+      type: PROPERTY_TYPE_BOOLEAN
+    }
+    properties {
+      id: "aspectRatio"
+      value: "160.0, 144.0, 0.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "useViewArea"
+      value: "true"
+      type: PROPERTY_TYPE_BOOLEAN
+    }
+    properties {
+      id: "viewArea"
+      value: "160.0, 144.0, 0.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "overworld"
+  prototype: "/objects/overworld.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "tilemap_1"
+  prototype: "/objects/tilemap_1.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "character_1"
+  prototype: "/objects/character_1.go"
+  position {
+    x: 200.0
+    y: 120.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+scale_along_z: 0

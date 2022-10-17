@@ -1,0 +1,33 @@
+[bootstrap]
+main_collection = /collections/main.collectionc
+render = /rendercam/rendercam.renderc
+
+[script]
+shared_state = 1
+
+[display]
+width = 160
+height = 144
+
+[android]
+input_method = HiddenInputField
+
+[project]
+title = Terraglyph
+publisher = Klayton Kowalski
+developer = Klayton Kowalski
+dependencies#0 = https://github.com/britzl/monarch/archive/master.zip
+dependencies#1 = https://github.com/subsoap/defos/archive/v2.6.0.zip
+dependencies#2 = https://github.com/subsoap/defsave/archive/v1.2.3.zip
+dependencies#3 = https://github.com/8bitskull/dicebag/archive/master.zip
+dependencies#4 = https://github.com/rgrams/rendercam/archive/master.zip
+dependencies#5 = https://github.com/klaytonkowalski/library-defold-tilemap-animator/archive/master.zip
+dependencies#6 = https://github.com/klaytonkowalski/library-defold-grid-engine/archive/master.zip
+
+[input]
+game_binding = /builtins/input/all.input_bindingc
+
+[graphics]
+default_texture_min_filter = nearest
+default_texture_mag_filter = nearest
+

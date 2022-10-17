@@ -1,0 +1,14 @@
+local h_str = require "modules.h_str"
+local monarch = require "monarch.monarch"
+local dicebag = require "dicebag.dicebag"
+
+function init(self)
+	msg.post(msg.url(), h_str.init_monarch)
+	dicebag.set_up_rng()
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == h_str.init_monarch then
+		monarch.show(h_str.collection_overworld)
+	end
+end
