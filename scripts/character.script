@@ -1,0 +1,39 @@
+local h_str = require "modules.h_str"
+local dgrid = require "dgrid.dgrid"
+
+local walk_speed = 3
+
+local function animate()
+	local direction = dgrid.get_direction(go.get_id())
+	local is_walking = dgrid.is_moving(go.get_id())
+	local sprite_url = msg.url(nil, nil, "sprite")
+	if direction == 1 then
+		sprite.play_flipbook(sprite_url, h_str.animation_idle_up)
+		sprite.set_hflip(sprite_url, false)
+	elseif direction == 2 then
+		sprite.play_flipbook(sprite_url, h_str.animation_idle_left)
+		sprite.set_hflip(sprite_url, false)
+	elseif direction == 3 then
+		sprite.play_flipbook(sprite_url, h_str.animation_idle_down)
+		sprite.set_hflip(sprite_url, false)
+	elseif direction == 4 then
+		sprite.play_flipbook(sprite_url, h_str.animation_idle_left)
+		sprite.set_hflip(sprite_url, true)
+	end
+end
+
+function init(self)
+	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), 1)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == h_str.message_character_turn then
+		dgrid.turn(go.get_id(), message.direction)
+	elseif message_id == h_str.message_character_walk then
+		dgrid.move(go.get_id(), walk_speed, message.direction)
+	elseif message_id == dgrid.messages.turn then
+		animate()
+	elseif message_id == dgrid.messages.walk then
+		animate()
+	end
+end

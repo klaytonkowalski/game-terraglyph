@@ -1,0 +1,61 @@
+local h_str = require "modules.h_str"
+local dgrid = require "dgrid.dgrid"
+
+local receiver_id
+
+local timer_move_handle = nil
+local timer_move_delay = 0.15
+
+local function move_start(new_direction)
+	local direction = dgrid.get_direction(receiver_id)
+	if direction == new_direction then
+		msg.post(msg.url(nil, receiver_id, "script"), h_str.message_character_walk, { direction = new_direction })
+	else
+		msg.post(msg.url(nil, receiver_id, "script"), h_str.message_character_turn, { direction = new_direction })
+		timer_move_handle = timer.delay(timer_move_delay, false, function()
+			msg.post(msg.url(nil, receiver_id, "script"), h_str.message_character_walk, { direction = new_direction })
+			timer_move_handle = nil
+		end)
+	end
+end
+
+local function move_stop()
+	if timer_move_handle then
+		timer.cancel(timer_move_handle)
+		timer_move_handle = nil
+	end
+end
+
+function init(self)
+	msg.post(msg.url(), h_str.acquire_input_focus)
+end
+
+function on_input(self, action_id, action)
+	if action.pressed then
+		if action_id == h_str.key_w then
+			move_start(1)
+		elseif action_id == h_str.key_a then
+			move_start(2)
+		elseif action_id == h_str.key_s then
+			move_start(3)
+		elseif action_id == h_str.key_d then
+			move_start(4)
+		end
+	elseif action.released then
+		if action_id == h_str.key_w then
+			move_stop()
+		elseif action_id == h_str.key_a then
+			move_stop()
+		elseif action_id == h_str.key_s then
+			move_stop()
+		elseif action_id == h_str.key_d then
+			move_stop()
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == h_str.message_set_receiver_id then
+		receiver_id = message.id
+	end
+end

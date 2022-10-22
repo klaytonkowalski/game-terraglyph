@@ -1,10 +1,33 @@
 local h_str = require "modules.h_str"
+local persist = require "modules.persist"
 local monarch = require "monarch.monarch"
 local dicebag = require "dicebag.dicebag"
 
+local function init_randomness()
+	local seed = os.clock() * 100000000000
+	math.randomseed(seed)
+	dicebag.set_up_rng(seed)
+end
+
+local function init_defos()
+	defos.set_fullscreen(persist.get_fullscreen())
+end
+
 function init(self)
+	msg.post(msg.url(), h_str.acquire_input_focus)
 	msg.post(msg.url(), h_str.init_monarch)
-	dicebag.set_up_rng()
+	persist.init()
+	init_randomness()
+	init_defos()
+end
+
+function on_input(self, action_id, action)
+	if action.pressed then
+		if action_id == h_str.key_f11 then
+			defos.toggle_fullscreen()
+			persist.set_fullscreen(defos.is_fullscreen())
+		end
+	end
 end
 
 function on_message(self, message_id, message, sender)
