@@ -1,15 +1,17 @@
 local h_str = require "modules.h_str"
 local persist = require "modules.persist"
+local dtile_animation_groups = require "modules.dtile_animation_groups"
 local dgrid = require "dgrid.dgrid"
+local dtile = require "dtile.dtile"
 
 local map_objects
 
 local function get_collision_data(tilemap_url, tilemap_x, tilemap_y, tilemap_width, tilemap_height)
 	local collision_data = {}
-	for y = 1, tilemap_height do
+	for y = tilemap_height, 1, -1 do
 		collision_data[#collision_data + 1] = {}
 		for x = 1, tilemap_width do
-			collision_data[y][#collision_data[y] + 1] = tilemap.get_tile(tilemap_url, h_str.layer_0, x, y) - 120
+			collision_data[#collision_data][x] = tilemap.get_tile(tilemap_url, h_str.layer_0, x, y) - 120
 		end
 	end
 	return collision_data
@@ -24,8 +26,9 @@ function init(self)
 	dgrid.set_map_dimensions(tilemap_width, tilemap_height)
 	local collision_data = get_collision_data(tilemap_url, tilemap_x, tilemap_y, tilemap_width, tilemap_height)
 	dgrid.set_map_tags(collision_data)
-	msg.post(msg.url(nil, hash("/controller"), "script"), h_str.message_set_receiver_id, { id = map_objects[hash("/player")] })
 	go.set_parent(hash("/camera_overworld"), map_objects[hash("/player")])
+	dtile.init(dtile_animation_groups[1], tilemap_url, { h_str.layer_1, h_str.layer_2, h_str.layer_3 })
+	msg.post(msg.url(nil, map_objects[hash("/controller")], "script"), h_str.message_set_receiver, { id = map_objects[hash("/player")] })
 end
 
 function update(self, dt)

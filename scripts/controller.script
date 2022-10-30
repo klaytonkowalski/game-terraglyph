@@ -3,59 +3,74 @@ local dgrid = require "dgrid.dgrid"
 
 local receiver_id
 
-local timer_move_handle = nil
-local timer_move_delay = 0.15
+local walk_speed = 3
+local run_speed = 6
 
-local function move_start(new_direction)
-	local direction = dgrid.get_direction(receiver_id)
-	if direction == new_direction then
-		msg.post(msg.url(nil, receiver_id, "script"), h_str.message_character_walk, { direction = new_direction })
-	else
-		msg.post(msg.url(nil, receiver_id, "script"), h_str.message_character_turn, { direction = new_direction })
-		timer_move_handle = timer.delay(timer_move_delay, false, function()
-			msg.post(msg.url(nil, receiver_id, "script"), h_str.message_character_walk, { direction = new_direction })
-			timer_move_handle = nil
-		end)
-	end
-end
+local input =
+{
+	key_w = false,
+	key_a = false,
+	key_s = false,
+	key_d = false,
+	key_lshift = false,
+	key_lctrl = false
+}
 
-local function move_stop()
-	if timer_move_handle then
-		timer.cancel(timer_move_handle)
-		timer_move_handle = nil
-	end
+local function get_input_direction()
+	return input.key_w or input.key_a or input.key_s or input.key_d
 end
 
 function init(self)
 	msg.post(msg.url(), h_str.acquire_input_focus)
 end
 
+function update(self, dt)
+	if not dgrid.is_moving(receiver_id) then
+		local input_direction = get_input_direction()
+		if input_direction then
+			if input.key_lctrl then
+				dgrid.turn(receiver_id, input_direction)
+			else
+				dgrid.move(receiver_id, input.key_lshift and run_speed or walk_speed, input_direction)
+			end
+		end
+	end
+end
+
 function on_input(self, action_id, action)
 	if action.pressed then
 		if action_id == h_str.key_w then
-			move_start(1)
+			input.key_w = 1
 		elseif action_id == h_str.key_a then
-			move_start(2)
+			input.key_a = 2
 		elseif action_id == h_str.key_s then
-			move_start(3)
+			input.key_s = 3
 		elseif action_id == h_str.key_d then
-			move_start(4)
+			input.key_d = 4
+		elseif action_id == h_str.key_lshift then
+			input.key_lshift = true
+		elseif action_id == h_str.key_lctrl then
+			input.key_lctrl = true
 		end
 	elseif action.released then
 		if action_id == h_str.key_w then
-			move_stop()
+			input.key_w = false
 		elseif action_id == h_str.key_a then
-			move_stop()
+			input.key_a = false
 		elseif action_id == h_str.key_s then
-			move_stop()
+			input.key_s = false
 		elseif action_id == h_str.key_d then
-			move_stop()
+			input.key_d = false
+		elseif action_id == h_str.key_lshift then
+			input.key_lshift = false
+		elseif action_id == h_str.key_lctrl then
+			input.key_lctrl = false
 		end
 	end
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == h_str.message_set_receiver_id then
+	if message_id == h_str.message_set_receiver then
 		receiver_id = message.id
 	end
 end

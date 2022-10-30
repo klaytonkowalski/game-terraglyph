@@ -2,38 +2,78 @@ local h_str = require "modules.h_str"
 local dgrid = require "dgrid.dgrid"
 
 local walk_speed = 3
+local run_speed = 6
 
-local function animate()
-	local direction = dgrid.get_direction(go.get_id())
-	local is_walking = dgrid.is_moving(go.get_id())
-	local sprite_url = msg.url(nil, nil, "sprite")
+go.property("direction", 1)
+
+local function animate_turn(direction)
+	local url = msg.url(nil, nil, "sprite")
 	if direction == 1 then
-		sprite.play_flipbook(sprite_url, h_str.animation_idle_up)
-		sprite.set_hflip(sprite_url, false)
+		sprite.set_hflip(url, false)
+		sprite.play_flipbook(url, h_str.animation_idle_up)
 	elseif direction == 2 then
-		sprite.play_flipbook(sprite_url, h_str.animation_idle_left)
-		sprite.set_hflip(sprite_url, false)
+		sprite.set_hflip(url, false)
+		sprite.play_flipbook(url, h_str.animation_idle_left)
 	elseif direction == 3 then
-		sprite.play_flipbook(sprite_url, h_str.animation_idle_down)
-		sprite.set_hflip(sprite_url, false)
+		sprite.set_hflip(url, false)
+		sprite.play_flipbook(url, h_str.animation_idle_down)
 	elseif direction == 4 then
-		sprite.play_flipbook(sprite_url, h_str.animation_idle_left)
-		sprite.set_hflip(sprite_url, true)
+		sprite.set_hflip(url, true)
+		sprite.play_flipbook(url, h_str.animation_idle_left)
 	end
 end
 
+local function animate_move(self, direction, speed)
+	local url = msg.url(nil, nil, "sprite")
+	if direction == 1 then
+		sprite.set_hflip(url, false)
+		if speed == walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_up_left or h_str.animation_walk_up_right)
+		elseif speed == run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_up_left or h_str.animation_run_up_right)
+		end
+	elseif direction == 2 then
+		sprite.set_hflip(url, false)
+		if speed == walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_left_left or h_str.animation_walk_left_right)
+		elseif speed == run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_left_left or h_str.animation_run_left_right)
+		end
+	elseif direction == 3 then
+		sprite.set_hflip(url, false)
+		if speed == walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_down_left or h_str.animation_walk_down_right)
+		elseif speed == run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_down_left or h_str.animation_run_down_right)
+		end
+	elseif direction == 4 then
+		sprite.set_hflip(url, true)
+		if speed == walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_left_left or h_str.animation_walk_left_right)
+		elseif speed == run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_left_left or h_str.animation_run_left_right)
+		end
+	end
+	self.left_hand_animation = not self.left_hand_animation
+end
+
 function init(self)
-	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), 1)
+	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), self.direction)
+	self.left_hand_animation = true
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == h_str.message_character_turn then
-		dgrid.turn(go.get_id(), message.direction)
-	elseif message_id == h_str.message_character_walk then
-		dgrid.move(go.get_id(), walk_speed, message.direction)
-	elseif message_id == dgrid.messages.turn then
-		animate()
-	elseif message_id == dgrid.messages.walk then
-		animate()
+	if message_id == dgrid.messages.turn then
+		animate_turn(message.direction)
+	elseif message_id == dgrid.messages.move_start then
+		animate_move(self, message.direction, message.speed)
+	elseif message_id == dgrid.messages.move_complete then
+		-- todo
+	elseif message_id == dgrid.messages.collide_passable then
+		-- todo
+	elseif message_id == dgrid.messages.collide_impassable then
+		-- todo
+	elseif message_id == dgrid.messages.collide_entity then
+		-- todo
 	end
 end
