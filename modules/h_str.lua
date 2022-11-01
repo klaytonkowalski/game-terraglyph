@@ -34,9 +34,10 @@ h_str.animation_run_left_right = hash("run_left_right")
 h_str.animation_run_down_left = hash("run_down_left")
 h_str.animation_run_down_right = hash("run_down_right")
 
-h_str.layer_0 = hash("layer_0")
-h_str.layer_1 = hash("layer_1")
-h_str.layer_2 = hash("layer_2")
-h_str.layer_3 = hash("layer_3")
+h_str.layer_collision = hash("layer_collision")
+h_str.layer_terrain = hash("layer_terrain")
+h_str.layer_object = hash("layer_object")
+h_str.layer_effect = hash("layer_effect")
+h_str.layer_canopy = hash("layer_canopy")
 
 return h_str

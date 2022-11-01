@@ -11,7 +11,7 @@ local function get_collision_data(tilemap_url, tilemap_x, tilemap_y, tilemap_wid
 	for y = tilemap_height, 1, -1 do
 		collision_data[#collision_data + 1] = {}
 		for x = 1, tilemap_width do
-			collision_data[#collision_data][x] = tilemap.get_tile(tilemap_url, h_str.layer_0, x, y) - 120
+			collision_data[#collision_data][x] = tilemap.get_tile(tilemap_url, h_str.layer_collision, x, y) - 248
 		end
 	end
 	return collision_data
@@ -27,7 +27,7 @@ function init(self)
 	local collision_data = get_collision_data(tilemap_url, tilemap_x, tilemap_y, tilemap_width, tilemap_height)
 	dgrid.set_map_tags(collision_data)
 	go.set_parent(hash("/camera_overworld"), map_objects[hash("/player")])
-	dtile.init(dtile_animation_groups[1], tilemap_url, { h_str.layer_1, h_str.layer_2, h_str.layer_3 })
+	dtile.init(dtile_animation_groups[1], tilemap_url, { h_str.layer_terrain, h_str.layer_object, h_str.layer_effect, h_str.layer_canopy })
 	msg.post(msg.url(nil, map_objects[hash("/controller")], "script"), h_str.message_set_receiver, { id = map_objects[hash("/player")] })
 end
 

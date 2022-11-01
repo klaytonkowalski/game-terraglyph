@@ -16,6 +16,11 @@ instances {
   component_properties {
     id: "script"
     properties {
+      id: "orthoScale"
+      value: "0.75"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
       id: "fixedAspectRatio"
       value: "true"
       type: PROPERTY_TYPE_BOOLEAN
