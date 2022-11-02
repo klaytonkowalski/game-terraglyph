@@ -40,4 +40,8 @@ h_str.layer_object = hash("layer_object")
 h_str.layer_effect = hash("layer_effect")
 h_str.layer_canopy = hash("layer_canopy")
 
+h_str.collision_passable = hash("passable")
+h_str.collision_impassable = hash("impassable")
+h_str.collision_water = hash("water")
+
 return h_str

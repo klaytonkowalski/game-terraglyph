@@ -1,10 +1,23 @@
 local h_str = require "modules.h_str"
 local persist = require "modules.persist"
-local dtile_animation_groups = require "modules.dtile_animation_groups"
 local dgrid = require "dgrid.dgrid"
 local dtile = require "dtile.dtile"
+local dtile_animation_groups = require "modules.dtile_animation_groups"
 
 local map_objects
+
+local tilesource_handle
+local tilesource_id = 1
+local tilesource_animation = 0
+
+go.property("tilesource_1_0", resource.tile_source("/tilesources/tilesource_1_0.tilesource"))
+go.property("tilesource_1_1", resource.tile_source("/tilesources/tilesource_1_1.tilesource"))
+go.property("tilesource_1_2", resource.tile_source("/tilesources/tilesource_1_2.tilesource"))
+go.property("tilesource_1_3", resource.tile_source("/tilesources/tilesource_1_3.tilesource"))
+go.property("tilesource_1_4", resource.tile_source("/tilesources/tilesource_1_4.tilesource"))
+go.property("tilesource_1_5", resource.tile_source("/tilesources/tilesource_1_5.tilesource"))
+go.property("tilesource_1_6", resource.tile_source("/tilesources/tilesource_1_6.tilesource"))
+go.property("tilesource_1_7", resource.tile_source("/tilesources/tilesource_1_7.tilesource"))
 
 local function get_collision_data(tilemap_url, tilemap_x, tilemap_y, tilemap_width, tilemap_height)
 	local collision_data = {}
@@ -17,8 +30,17 @@ local function get_collision_data(tilemap_url, tilemap_x, tilemap_y, tilemap_wid
 	return collision_data
 end
 
+local function update_tilesource(self)
+	tilesource_animation = tilesource_animation + 1
+	if tilesource_animation == 8 then
+		tilesource_animation = 0
+	end
+	go.set(msg.url(nil, map_objects[hash("/tilemap")], "tilemap"), "tile_source", self["tilesource_" .. tilesource_id .. "_" .. tilesource_animation])
+end
+
 function init(self)
 	dgrid.set_tile_dimensions(16, 16)
+	dgrid.add_tag(h_str.collision_water, false)
 	local continue_data = persist.get_continue_data()
 	map_objects = collectionfactory.create(msg.url(nil, hash("/factory_overworld"), "collectionfactory_map_" .. continue_data.map_id))
 	local tilemap_url = msg.url(nil, map_objects[hash("/tilemap")], "tilemap")
@@ -28,6 +50,7 @@ function init(self)
 	dgrid.set_map_tags(collision_data)
 	go.set_parent(hash("/camera_overworld"), map_objects[hash("/player")])
 	dtile.init(dtile_animation_groups[1], tilemap_url, { h_str.layer_terrain, h_str.layer_object, h_str.layer_effect, h_str.layer_canopy })
+	tilesource_handle = timer.delay(0.25, true, update_tilesource)
 	msg.post(msg.url(nil, map_objects[hash("/controller")], "script"), h_str.message_set_receiver, { id = map_objects[hash("/player")] })
 end
 

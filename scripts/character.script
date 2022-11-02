@@ -5,6 +5,7 @@ local walk_speed = 3
 local run_speed = 6
 
 go.property("direction", 1)
+go.property("event_id", 0)
 
 local function animate_turn(direction)
 	local url = msg.url(nil, nil, "sprite")
@@ -58,7 +59,7 @@ local function animate_move(self, direction, speed)
 end
 
 function init(self)
-	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), self.direction)
+	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), self.direction, { event_id = self.event_id })
 	self.left_hand_animation = true
 end
 

@@ -16,18 +16,13 @@ instances {
   component_properties {
     id: "script"
     properties {
-      id: "orthoScale"
-      value: "0.75"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
       id: "fixedAspectRatio"
       value: "true"
       type: PROPERTY_TYPE_BOOLEAN
     }
     properties {
       id: "aspectRatio"
-      value: "16.0, 9.0, 0.0"
+      value: "3.0, 2.0, 0.0"
       type: PROPERTY_TYPE_VECTOR3
     }
     properties {
@@ -37,7 +32,7 @@ instances {
     }
     properties {
       id: "viewArea"
-      value: "320.0, 180.0, 0.0"
+      value: "240.0, 160.0, 0.0"
       type: PROPERTY_TYPE_VECTOR3
     }
   }

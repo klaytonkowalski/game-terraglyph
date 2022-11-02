@@ -23,8 +23,8 @@ instances {
   id: "player"
   prototype: "/objects/character_1.go"
   position {
-    x: 184.0
-    y: 120.0
+    x: 200.0
+    y: 152.0
     z: 0.0
   }
   rotation {
