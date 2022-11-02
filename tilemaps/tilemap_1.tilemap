@@ -1646,7 +1646,7 @@ layers {
   cell {
     x: 9
     y: 7
-    tile: 249
+    tile: 248
     h_flip: 0
     v_flip: 0
     rotate90: 0
@@ -1870,7 +1870,7 @@ layers {
   cell {
     x: 9
     y: 8
-    tile: 248
+    tile: 249
     h_flip: 0
     v_flip: 0
     rotate90: 0
@@ -7051,7 +7051,7 @@ layers {
   cell {
     x: 12
     y: 6
-    tile: 87
+    tile: 84
     h_flip: 0
     v_flip: 0
     rotate90: 0
@@ -7067,7 +7067,7 @@ layers {
   cell {
     x: 14
     y: 6
-    tile: 86
+    tile: 84
     h_flip: 0
     v_flip: 0
     rotate90: 0
@@ -11390,14 +11390,6 @@ layers {
     rotate90: 0
   }
   cell {
-    x: 9
-    y: 7
-    tile: 57
-    h_flip: 0
-    v_flip: 0
-    rotate90: 0
-  }
-  cell {
     x: 11
     y: 7
     tile: 54
@@ -11513,6 +11505,14 @@ layers {
     x: 6
     y: 8
     tile: 56
+    h_flip: 0
+    v_flip: 0
+    rotate90: 0
+  }
+  cell {
+    x: 9
+    y: 8
+    tile: 57
     h_flip: 0
     v_flip: 0
     rotate90: 0
@@ -12712,7 +12712,7 @@ layers {
   cell {
     x: 16
     y: 18
-    tile: 16
+    tile: 2
     h_flip: 0
     v_flip: 0
     rotate90: 0
@@ -13741,11 +13741,6 @@ layers {
     v_flip: 0
     rotate90: 0
   }
-}
-layers {
-  id: "layer_effect"
-  z: 0.3
-  is_visible: 1
 }
 layers {
   id: "layer_canopy"
@@ -13768,14 +13763,6 @@ layers {
     rotate90: 0
   }
   cell {
-    x: 9
-    y: 8
-    tile: 49
-    h_flip: 0
-    v_flip: 0
-    rotate90: 0
-  }
-  cell {
     x: 18
     y: 8
     tile: 48
@@ -13843,6 +13830,14 @@ layers {
     x: 6
     y: 9
     tile: 48
+    h_flip: 0
+    v_flip: 0
+    rotate90: 0
+  }
+  cell {
+    x: 9
+    y: 9
+    tile: 49
     h_flip: 0
     v_flip: 0
     rotate90: 0

@@ -1,5 +1,6 @@
 local h_str = require "modules.h_str"
 local dgrid = require "dgrid.dgrid"
+local dtile = require "dtile.dtile"
 
 local walk_speed = 3
 local run_speed = 6
@@ -24,7 +25,7 @@ local function animate_turn(direction)
 	end
 end
 
-local function animate_move(self, direction, speed)
+local function animate_move_start(self, direction, speed)
 	local url = msg.url(nil, nil, "sprite")
 	if direction == 1 then
 		sprite.set_hflip(url, false)
@@ -58,6 +59,19 @@ local function animate_move(self, direction, speed)
 	self.left_hand_animation = not self.left_hand_animation
 end
 
+local function tile_move_start(self, start_x, start_y, target_x, target_y)
+	local start_tiles = dtile.get_tile(start_x, start_y)
+	local start_tile_object = start_tiles[h_str.layer_object]
+	local target_tiles = dtile.get_tile(target_x, target_y)
+	local target_tile_object = target_tiles[h_str.layer_object]
+	-- todo
+	dtile.animate(target_x, target_y, h_str.layer_object)
+end
+
+local function tile_move_complete(self)
+	
+end
+
 function init(self)
 	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), self.direction, { event_id = self.event_id })
 	self.left_hand_animation = true
@@ -67,9 +81,10 @@ function on_message(self, message_id, message, sender)
 	if message_id == dgrid.messages.turn then
 		animate_turn(message.direction)
 	elseif message_id == dgrid.messages.move_start then
-		animate_move(self, message.direction, message.speed)
+		tile_move_start(self, message.start_x, message.start_y, message.target_x, message.target_y)
+		animate_move_start(self, message.direction, message.speed)
 	elseif message_id == dgrid.messages.move_complete then
-		-- todo
+		tile_move_complete(self)
 	elseif message_id == dgrid.messages.collide_passable then
 		-- todo
 	elseif message_id == dgrid.messages.collide_impassable then

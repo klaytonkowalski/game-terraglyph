@@ -25,7 +25,7 @@ function init(self)
 end
 
 function update(self, dt)
-	if not dgrid.is_moving(receiver_id) then
+	if not dgrid.is_entity_moving(receiver_id) then
 		local input_direction = get_input_direction()
 		if input_direction then
 			if input.key_lctrl then

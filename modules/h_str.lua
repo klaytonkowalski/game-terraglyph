@@ -37,7 +37,6 @@ h_str.animation_run_down_right = hash("run_down_right")
 h_str.layer_collision = hash("layer_collision")
 h_str.layer_terrain = hash("layer_terrain")
 h_str.layer_object = hash("layer_object")
-h_str.layer_effect = hash("layer_effect")
 h_str.layer_canopy = hash("layer_canopy")
 
 h_str.collision_passable = hash("passable")
