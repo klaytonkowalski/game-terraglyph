@@ -43,4 +43,8 @@ h_str.collision_passable = hash("passable")
 h_str.collision_impassable = hash("impassable")
 h_str.collision_water = hash("water")
 
+h_str.font_monogram = hash("monogram")
+
+h_str.node_dialog_background = hash("node_dialog_background")
+
 return h_str

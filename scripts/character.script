@@ -61,11 +61,9 @@ end
 
 local function tile_move_start(self, start_x, start_y, target_x, target_y)
 	local start_tiles = dtile.get_tile(start_x, start_y)
-	local start_tile_object = start_tiles[h_str.layer_object]
+	local start_tile_object_layer = start_tiles[h_str.layer_object]
 	local target_tiles = dtile.get_tile(target_x, target_y)
-	local target_tile_object = target_tiles[h_str.layer_object]
-	-- todo
-	dtile.animate(target_x, target_y, h_str.layer_object)
+	local target_tile_object_layer = target_tiles[h_str.layer_object]
 end
 
 local function tile_move_complete(self)

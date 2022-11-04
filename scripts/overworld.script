@@ -22,12 +22,12 @@ local dgrid_tile_data =
 {
 	[1] =
 	{
-		[9] = { encounter = true },
-		[10] = { encounter = true },
-		[11] = { encounter = true },
-		[17] = { encounter = true },
-		[18] = { encounter = true },
-		[19] = { encounter = true },
+		[9] = { encounter = true, hostile_grass = true },
+		[10] = { encounter = true, hostile_grass = true },
+		[11] = { encounter = true, hostile_grass = true },
+		[17] = { encounter = true, hostile_grass = true },
+		[18] = { encounter = true, hostile_grass = true },
+		[19] = { encounter = true, hostile_grass = true },
 		[76] = { footprint = true },
 		[77] = { footprint = true },
 		[78] = { footprint = true },
@@ -58,9 +58,7 @@ local dtile_animation_groups =
 {
 	[1] =
 	{
-		[9] = { sequence = { 9, 17 }, trigger = true, frequency = 8 },
-		[10] = { sequence = { 10, 18 }, trigger = true, frequency = 8 },
-		[11] = { sequence = { 11, 19 }, trigger = true, frequency = 8 }
+		
 	}
 }
 
