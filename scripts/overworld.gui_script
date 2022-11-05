@@ -2,10 +2,20 @@ local h_str = require "modules.h_str"
 local dtypewriter = require "dtypewriter.dtypewriter"
 
 function init(self)
-	dtypewriter.toggle_messages(true)
-	dtypewriter.set_messages_url(msg.url())
 	dtypewriter.set_default_color(vmath.vector4(0.31, 0.26, 0.18, 1))
-	dtypewriter.set_color("default", vmath.vector4(0.31, 0.26, 0.18, 1))
-	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 7, 1, 226, 3, 2)
-	dtypewriter.load("  Hello,  World! <br> This age is <color=green>24 years old.<color=black><br>My name is <color=white>Klayton Kowalski. ")
+	dtypewriter.set_color("white", vmath.vector4(1, 1, 1, 1))
+	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 7, 1, 226, 3, 2, msg.url())
+	dtypewriter.load("Hello <speed=5>World!<speed=default><br><color=white>Okay,<color=default> then!<br>Let's race!<br><br><br>Here! :)<br>New paragraph after this line...<p>...and here we are! :D")
+	dtypewriter.start()
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == dtypewriter.messages.start then
+	elseif message_id == dtypewriter.messages.type then
+	elseif message_id == dtypewriter.messages.wait then
+		timer.delay(1, false, function() dtypewriter.continue() end)
+	elseif message_id == dtypewriter.messages.continue then
+	elseif message_id == dtypewriter.messages.complete then
+		timer.delay(1, false, function() dtypewriter.clear() end)
+	end
 end
