@@ -13,6 +13,7 @@ h_str.key_s = hash("key_s")
 h_str.key_d = hash("key_d")
 h_str.key_lshift = hash("key_lshift")
 h_str.key_lctrl = hash("key_lctrl")
+h_str.key_space = hash("key_space")
 
 h_str.message_set_receiver = hash("message_set_receiver")
 h_str.message_character_turn = hash("message_character_turn")

@@ -5,7 +5,7 @@ local dtile = require "dtile.dtile"
 local walk_speed = 3
 local run_speed = 6
 
-go.property("direction", 1)
+go.property("direction", 3)
 go.property("event_id", 0)
 
 local function animate_turn(direction)

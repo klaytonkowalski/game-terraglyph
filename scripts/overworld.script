@@ -1,12 +1,14 @@
 local h_str = require "modules.h_str"
 local persist = require "modules.persist"
+local map_data = require "modules.map_data"
 local dgrid = require "dgrid.dgrid"
 local dtile = require "dtile.dtile"
 
+local map_id
 local map_objects
 
 local tilesource_handle
-local tilesource_id = 1
+local tilesource_id
 local tilesource_animation = 0
 
 go.property("tilesource_1_0", resource.tile_source("/tilesources/tilesource_1_0.tilesource"))
@@ -17,50 +19,6 @@ go.property("tilesource_1_4", resource.tile_source("/tilesources/tilesource_1_4.
 go.property("tilesource_1_5", resource.tile_source("/tilesources/tilesource_1_5.tilesource"))
 go.property("tilesource_1_6", resource.tile_source("/tilesources/tilesource_1_6.tilesource"))
 go.property("tilesource_1_7", resource.tile_source("/tilesources/tilesource_1_7.tilesource"))
-
-local dgrid_tile_data =
-{
-	[1] =
-	{
-		[9] = { encounter = true, hostile_grass = true },
-		[10] = { encounter = true, hostile_grass = true },
-		[11] = { encounter = true, hostile_grass = true },
-		[17] = { encounter = true, hostile_grass = true },
-		[18] = { encounter = true, hostile_grass = true },
-		[19] = { encounter = true, hostile_grass = true },
-		[76] = { footprint = true },
-		[77] = { footprint = true },
-		[78] = { footprint = true },
-		[84] = { footprint = true },
-		[85] = { footprint = true },
-		[86] = { footprint = true },
-		[87] = { footprint = true },
-		[92] = { footprint = true },
-		[93] = { footprint = true },
-		[94] = { footprint = true },
-		[95] = { footprint = true },
-		[145] = { footprint = true },
-		[146] = { footprint = true },
-		[147] = { footprint = true },
-		[148] = { footprint = true },
-		[149] = { footprint = true },
-		[153] = { footprint = true },
-		[155] = { footprint = true },
-		[156] = { footprint = true },
-		[157] = { footprint = true },
-		[161] = { footprint = true },
-		[162] = { footprint = true },
-		[163] = { footprint = true }
-	}
-}
-
-local dtile_animation_groups =
-{
-	[1] =
-	{
-		
-	}
-}
 
 local function generate_collision_tags(tilemap_url, tilemap_width, tilemap_height)
 	local collision_tags = {}
@@ -73,15 +31,22 @@ local function generate_collision_tags(tilemap_url, tilemap_width, tilemap_heigh
 	dgrid.set_map_tags(collision_tags)
 end
 
-local function generate_tile_data(tilemap_url, tilemap_width, tilemap_height)
+local function generate_map_data(tilemap_url, tilemap_width, tilemap_height)
 	for _, layer in ipairs({ h_str.layer_terrain, h_str.layer_object, h_str.layer_canopy }) do
 		for y = tilemap_height, 1, -1 do
 			for x = 1, tilemap_width do
 				local tile_id = tilemap.get_tile(tilemap_url, layer, x, y)
 				local tile_data = dgrid.get_tile_data(x, y)
-				if dgrid_tile_data[tilesource_id][tile_id] then
-					for key, value in pairs(dgrid_tile_data[tilesource_id][tile_id]) do
+				if map_data.tilesources[tilesource_id][tile_id] then
+					for key, value in pairs(map_data.tilesources[tilesource_id][tile_id]) do
 						tile_data[key] = value
+					end
+				end
+				for _, other_tile_data in ipairs(map_data.tiles[map_id]) do
+					if other_tile_data.x == x and other_tile_data.y == y then
+						for key, value in pairs(other_tile_data.data) do
+							tile_data[key] = value
+						end
 					end
 				end
 			end
@@ -101,14 +66,16 @@ function init(self)
 	dgrid.set_tile_dimensions(16, 16)
 	dgrid.add_map_tag(h_str.collision_water, false)
 	local continue_data = persist.get_continue_data()
+	map_id = continue_data.map_id
 	map_objects = collectionfactory.create(msg.url(nil, hash("/factory_overworld"), "collectionfactory_map_" .. continue_data.map_id))
+	tilesource_id = map_data.map_to_tilesource[continue_data.map_id]
 	local tilemap_url = msg.url(nil, map_objects[hash("/tilemap")], "tilemap")
 	local _, _, tilemap_width, tilemap_height = tilemap.get_bounds(tilemap_url)
 	dgrid.set_map_dimensions(tilemap_width, tilemap_height)
 	generate_collision_tags(tilemap_url, tilemap_width, tilemap_height)
-	generate_tile_data(tilemap_url, tilemap_width, tilemap_height)
+	generate_map_data(tilemap_url, tilemap_width, tilemap_height)
 	go.set_parent(hash("/camera_overworld"), map_objects[hash("/player")])
-	dtile.init(dtile_animation_groups[1], tilemap_url, { h_str.layer_terrain, h_str.layer_object, h_str.layer_canopy })
+	dtile.init(map_data.animations[tilesource_id], tilemap_url, { h_str.layer_terrain, h_str.layer_object, h_str.layer_canopy })
 	tilesource_handle = timer.delay(0.25, true, update_tilesource)
 	msg.post(msg.url(nil, map_objects[hash("/controller")], "script"), h_str.message_set_receiver, { id = map_objects[hash("/player")] })
 end

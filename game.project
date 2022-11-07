@@ -16,6 +16,7 @@ input_method = HiddenInputField
 title = Terraglyph
 publisher = Klayton Kowalski
 developer = Klayton Kowalski
+custom_resources = /assets/events
 dependencies#0 = https://github.com/britzl/monarch/archive/master.zip
 dependencies#1 = https://github.com/subsoap/defos/archive/v2.6.0.zip
 dependencies#2 = https://github.com/subsoap/defsave/archive/v1.2.3.zip
@@ -23,7 +24,7 @@ dependencies#3 = https://github.com/8bitskull/dicebag/archive/master.zip
 dependencies#4 = https://github.com/rgrams/rendercam/archive/master.zip
 dependencies#5 = https://github.com/klaytonkowalski/library-defold-tilemap-animator/archive/master.zip
 dependencies#6 = https://github.com/klaytonkowalski/library-defold-grid-engine/archive/master.zip
-dependencies#7 = https://github.com/Melsoft-Games/defold-cjson/archive/master.zip
+dependencies#7 = https://github.com/klaytonkowalski/library-defold-typewriter/archive/main.zip
 
 [input]
 game_binding = /builtins/input/all.input_bindingc
