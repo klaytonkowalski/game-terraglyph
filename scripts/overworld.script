@@ -83,3 +83,11 @@ end
 function update(self, dt)
 	dgrid.update(dt)
 end
+
+function on_message(self, message_id, message, sender)
+	if message_id == h_str.message_command_lock then
+		dgrid.toggle_entity_input(map_objects[message.id], false)
+	elseif message_id == h_str.message_command_unlock then
+		dgrid.toggle_entity_input(map_objects[message.id], true)
+	end
+end

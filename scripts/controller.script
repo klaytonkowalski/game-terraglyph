@@ -1,5 +1,4 @@
 local h_str = require "modules.h_str"
-local event = require "modules.event"
 local dgrid = require "dgrid.dgrid"
 
 local receiver_id
@@ -24,8 +23,8 @@ end
 
 local function interact()
 	local interaction = dgrid.interact(receiver_id)
-	if interaction.tile_data.event_id then
-		event.trigger(interaction.tile_data.event_id)
+	if interaction and interaction.tile_data.event_id then
+		msg.post(msg.url("collection_main", hash("/event"), "script"), h_str.message_trigger_event, { id = interaction.tile_data.event_id })
 	end
 end
 

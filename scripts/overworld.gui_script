@@ -1,16 +1,49 @@
 local h_str = require "modules.h_str"
 local dtypewriter = require "dtypewriter.dtypewriter"
 
+local _command_hook
+
 function init(self)
+	msg.post(msg.url(), h_str.acquire_input_focus)
+	local node_dialog_spinner = gui.get_node(h_str.node_dialog_spinner)
+	gui.animate(node_dialog_spinner, "rotation.z", -360, gui.EASING_LINEAR, 2, 0, function() end, gui.PLAYBACK_LOOP_FORWARD)
 	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 7, 1, 226, 3, 2, msg.url())
 	dtypewriter.set_default_color(vmath.vector4(0.31, 0.26, 0.18, 1))
+	dtypewriter.set_color("green", vmath.vector4(0.26, 0.47, 0.22, 1))
+end
+
+function on_input(self, action_id, action)
+	if action.pressed then
+		if action_id == h_str.key_space then
+			if dtypewriter.is_waiting() then
+				dtypewriter.continue()
+			elseif dtypewriter.is_complete() then
+				gui.set_enabled(gui.get_node(h_str.node_dialog_background), false)
+				gui.set_enabled(gui.get_node(h_str.node_dialog_spinner), false)
+				dtypewriter.clear()
+				if _command_hook then
+					msg.post(msg.url(h_str.collection_main, hash("/event"), "script"), h_str.message_unhook_command, { hook = _command_hook })
+					_command_hook = nil
+				end
+			end
+		end
+	end
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == dtypewriter.messages.start then
+		gui.set_enabled(gui.get_node(h_str.node_dialog_background), true)
 	elseif message_id == dtypewriter.messages.type then
 	elseif message_id == dtypewriter.messages.wait then
+		gui.set_enabled(gui.get_node(h_str.node_dialog_spinner), true)
 	elseif message_id == dtypewriter.messages.continue then
+		gui.set_enabled(gui.get_node(h_str.node_dialog_spinner), false)
 	elseif message_id == dtypewriter.messages.complete then
+		gui.set_enabled(gui.get_node(h_str.node_dialog_spinner), true)
+	elseif message_id == h_str.message_command_load_dialog then
+		dtypewriter.load(message.text)
+	elseif message_id == h_str.message_command_start_dialog then
+		dtypewriter.start()
+		_command_hook = message.hook
 	end
 end

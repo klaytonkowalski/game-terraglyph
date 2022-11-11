@@ -1,4 +1,11 @@
 [
-	"lock",
-	"unlock"
+	{ "cmd": "lock", "args": { "id": "player" } },
+	{ "cmd": "load_dialog", "args": { "text": "I am testing several scripting commands, but let me show you an obvious one called <color=green>pause<color=default><speed=9>..." } },
+	{ "cmd": "start_dialog", "args": { "hook": 1 } }
+	{ "cmd": "wait", "args": { "hook": 1 } }
+	{ "cmd": "pause", "args": { "duration": 1 } },
+	{ "cmd": "load_dialog", "args": { "text": "That was one second.\nWoohoo!" } },
+	{ "cmd": "start_dialog", "args": { "hook": 2 } }
+	{ "cmd": "wait", "args": { "hook": 2 } }
+	{ "cmd": "unlock", "args": { "id": "player" } }
 ]

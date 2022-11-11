@@ -1,0 +1,92 @@
+local h_str = require "modules.h_str"
+
+local _event_id
+local _coroutine
+local _instruction
+
+local _hooks = {}
+
+local function command_lock(arguments)
+	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "script"), h_str.message_command_lock, { id = hash("/" .. arguments.id) })
+end
+
+local function command_unlock(arguments)
+	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "script"), h_str.message_command_unlock, { id = hash("/" .. arguments.id) })
+end
+
+local function command_pause(arguments)
+	local complete = false
+	timer.delay(arguments.duration, false, function()
+		complete = true
+	end)
+	while not complete do
+		coroutine.yield()
+	end
+end
+
+local function command_wait(arguments)
+	while _hooks[arguments.hook] do
+		coroutine.yield()
+	end
+end
+
+local function command_load_dialog(arguments)
+	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "gui"), h_str.message_command_load_dialog, { text = arguments.text })
+end
+
+local function command_start_dialog(arguments)
+	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "gui"), h_str.message_command_start_dialog, { hook = arguments.hook })
+end
+
+local _commands =
+{
+	lock = command_lock,
+	unlock = command_unlock,
+	pause = command_pause,
+	wait = command_wait,
+	load_dialog = command_load_dialog,
+	start_dialog = command_start_dialog
+}
+
+local function process()
+	local path = "/assets/events/event_" .. _event_id .. ".json"
+	local json_string = sys.load_resource(path)
+	if json_string then
+		local lua_table = json.decode(json_string)
+		if lua_table then
+			_instruction = 1
+			while _instruction <= #lua_table do
+				local cmd = lua_table[_instruction].cmd
+				local args = lua_table[_instruction].args
+				if args and args.hook then
+					_hooks[args.hook] = true
+				end
+				_commands[cmd](args)
+				_instruction = _instruction + 1
+			end
+		end
+	end
+end
+
+function update(self, dt)
+	if _coroutine then
+		coroutine.resume(_coroutine)
+		if coroutine.status(_coroutine) == "dead" then
+			_event_id = nil
+			_coroutine = nil
+			_instruction = nil
+			_hooks = {}
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == h_str.message_trigger_event then
+		if not _coroutine then
+			_event_id = message.id
+			_coroutine = coroutine.create(process)
+		end
+	elseif message_id == h_str.message_unhook_command then
+		_hooks[message.hook] = nil
+	end
+end
