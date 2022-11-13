@@ -60,10 +60,18 @@ local function animate_move_start(self, direction, speed)
 end
 
 local function tile_move_start(self, start_x, start_y, target_x, target_y)
-	local start_tiles = dtile.get_tile(start_x, start_y)
-	local start_tile_object_layer = start_tiles[h_str.layer_object]
-	local target_tiles = dtile.get_tile(target_x, target_y)
-	local target_tile_object_layer = target_tiles[h_str.layer_object]
+	local start_data = dgrid.get_tile_data(start_x, start_y)
+	if start_data.grass_tall then
+		timer.delay(0.5 / dgrid.get_entity_speed(go.get_id()), false, function()
+			dtile.set_tile(h_str.layer_object, start_x, start_y, dtile.get_tile(start_x, start_y, h_str.layer_object) - 8)
+		end)
+	end
+	local target_data = dgrid.get_tile_data(target_x, target_y)
+	if target_data.grass_tall then
+		timer.delay(0.5 / dgrid.get_entity_speed(go.get_id()), false, function()
+			dtile.set_tile(h_str.layer_object, target_x, target_y, dtile.get_tile(target_x, target_y, h_str.layer_object) + 8)
+		end)
+	end
 end
 
 local function tile_move_complete(self)

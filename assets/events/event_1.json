@@ -1,6 +1,6 @@
 [
 	{ "cmd": "lock", "args": { "id": "player" } },
-	{ "cmd": "load_dialog", "args": { "text": "I am testing several scripting commands, but let me show you an obvious one called <color=green>pause<color=default><speed=9>..." } },
+	{ "cmd": "load_dialog", "args": { "text": "This is <color=green>default<color=default> speed.<line><speed=instant>This is <color=green>instant<color=default> speed.<speed=default><line><speed=6>This is <color=green>slow<color=default> speed.<speed=default><line>Did you also notice the change in <color=green>text color<color=default>? The dtypewriter module can do lots of cool things!<line>Let's <color=green>pause<color=default> for a few seconds before continuing<speed=1>...<speed=default><paragraph>And here we are, a few seconds later and on a <color=green>brand new paragraph<color=default>!" } },
 	{ "cmd": "start_dialog", "args": { "hook": 1 } }
 	{ "cmd": "wait", "args": { "hook": 1 } }
 	{ "cmd": "pause", "args": { "duration": 1 } },

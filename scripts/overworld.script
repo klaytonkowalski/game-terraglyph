@@ -67,7 +67,7 @@ function init(self)
 	dgrid.add_map_tag(h_str.collision_water, false)
 	local continue_data = persist.get_continue_data()
 	map_id = continue_data.map_id
-	map_objects = collectionfactory.create(msg.url(nil, hash("/factory_overworld"), "collectionfactory_map_" .. continue_data.map_id))
+	map_objects = collectionfactory.create(msg.url(nil, nil, "collectionfactory_map_" .. continue_data.map_id))
 	tilesource_id = map_data.map_to_tilesource[continue_data.map_id]
 	local tilemap_url = msg.url(nil, map_objects[hash("/tilemap")], "tilemap")
 	local _, _, tilemap_width, tilemap_height = tilemap.get_bounds(tilemap_url)

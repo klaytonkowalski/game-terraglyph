@@ -14,12 +14,12 @@ map_data.tilesources =
 {
 	[1] =
 	{
-		[9] = { encounter = true, hostile_grass = true },
-		[10] = { encounter = true, hostile_grass = true },
-		[11] = { encounter = true, hostile_grass = true },
-		[17] = { encounter = true, hostile_grass = true },
-		[18] = { encounter = true, hostile_grass = true },
-		[19] = { encounter = true, hostile_grass = true },
+		[9] = { encounter = true, grass_tall = true },
+		[10] = { encounter = true, grass_tall = true },
+		[11] = { encounter = true, grass_tall = true },
+		[17] = { encounter = true, grass_tall = true },
+		[18] = { encounter = true, grass_tall = true },
+		[19] = { encounter = true, grass_tall = true },
 		[76] = { footprint = true },
 		[77] = { footprint = true },
 		[78] = { footprint = true },

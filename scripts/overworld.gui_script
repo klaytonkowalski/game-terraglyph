@@ -9,7 +9,7 @@ function init(self)
 	gui.animate(node_dialog_spinner, "rotation.z", -360, gui.EASING_LINEAR, 2, 0, function() end, gui.PLAYBACK_LOOP_FORWARD)
 	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 7, 1, 226, 3, 2, msg.url())
 	dtypewriter.set_default_color(vmath.vector4(0.31, 0.26, 0.18, 1))
-	dtypewriter.set_color("green", vmath.vector4(0.26, 0.47, 0.22, 1))
+	dtypewriter.add_color("green", vmath.vector4(0.26, 0.47, 0.22, 1))
 end
 
 function on_input(self, action_id, action)
