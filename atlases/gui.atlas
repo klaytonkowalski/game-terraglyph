@@ -1,7 +1,7 @@
 animations {
   id: "dialog_background"
   images {
-    image: "/assets/images/dialog_background_1.png"
+    image: "/assets/images/dialog_background.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
@@ -17,6 +17,112 @@ animations {
   }
   playback: PLAYBACK_NONE
   fps: 0
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "start_inventory_idle"
+  images {
+    image: "/assets/images/start_inventory_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_NONE
+  fps: 0
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "start_inventory_active"
+  images {
+    image: "/assets/images/start_inventory_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_inventory_1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_inventory_2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_inventory_2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 4
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "start_party_idle"
+  images {
+    image: "/assets/images/start_party_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_NONE
+  fps: 0
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "start_party_active"
+  images {
+    image: "/assets/images/start_party_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_party_1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_party_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_party_2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 3
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "start_terraglyph_idle"
+  images {
+    image: "/assets/images/start_terraglyph_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_NONE
+  fps: 0
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "start_terraglyph_active"
+  images {
+    image: "/assets/images/start_terraglyph_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_terraglyph_1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_terraglyph_2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_terraglyph_3.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/assets/images/start_terraglyph_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 4
   flip_horizontal: 0
   flip_vertical: 0
 }

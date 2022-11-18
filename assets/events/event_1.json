@@ -1,11 +1,11 @@
 [
 	{ "cmd": "lock", "args": { "id": "player" } },
-	{ "cmd": "load_dialog", "args": { "text": "This is <color=green>default<color=default> speed.<line><speed=instant>This is <color=green>instant<color=default> speed.<speed=default><line><speed=6>This is <color=green>slow<color=default> speed.<speed=default><line>Did you also notice the change in <color=green>text color<color=default>? The dtypewriter module can do lots of cool things!<line>Let's <color=green>pause<color=default> for a few seconds before continuing<speed=1>...<speed=default><paragraph>And here we are, a few seconds later and on a <color=green>brand new paragraph<color=default>!" } },
-	{ "cmd": "start_dialog", "args": { "hook": 1 } }
-	{ "cmd": "wait", "args": { "hook": 1 } }
+	{ "cmd": "load_dialog", "args": { "text": "Just like the classic RPG dialog systems, <color=green>dtypewriter<color=default> is a fantastic dialog solution!<paragraph>It can do all kinds of neat things, like <color=green>colors<color=default>, <speed=3>speeds<speed=default>, and <speed=instant>instant text display<speed=default>, among other things!" } },
+	{ "cmd": "start_dialog", "args": { "hook": 1 } },
+	{ "cmd": "wait", "args": { "hook": 1 } },
 	{ "cmd": "pause", "args": { "duration": 1 } },
-	{ "cmd": "load_dialog", "args": { "text": "That was one second.\nWoohoo!" } },
-	{ "cmd": "start_dialog", "args": { "hook": 2 } }
-	{ "cmd": "wait", "args": { "hook": 2 } }
+	{ "cmd": "load_dialog", "args": { "text": "That was one second.<line>Woohoo!" } },
+	{ "cmd": "start_dialog", "args": { "hook": 2 } },
+	{ "cmd": "wait", "args": { "hook": 2 } },
 	{ "cmd": "unlock", "args": { "id": "player" } }
 ]

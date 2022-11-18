@@ -8,17 +8,17 @@ local run_speed = 6
 
 local input =
 {
-	key_w = false,
-	key_a = false,
-	key_s = false,
-	key_d = false,
-	key_lshift = false,
-	key_lctrl = false,
-	key_space = false
+	key_up = false,
+	key_left = false,
+	key_down = false,
+	key_right = false,
+	key_z = false,
+	key_x = false,
+	key_lctrl = false
 }
 
 local function get_input_direction()
-	return input.key_w or input.key_a or input.key_s or input.key_d
+	return input.key_up or input.key_left or input.key_down or input.key_right
 end
 
 local function interact()
@@ -35,14 +35,14 @@ end
 function update(self, dt)
 	if not dgrid.is_entity_moving(receiver_id) then
 		local input_direction = get_input_direction()
-		if input.key_space then
-			input.key_space = false
+		if input.key_z then
+			input.key_z = false
 			interact()
 		elseif input_direction then
 			if input.key_lctrl then
 				dgrid.turn(receiver_id, input_direction)
 			else
-				dgrid.move(receiver_id, input.key_lshift and run_speed or walk_speed, input_direction)
+				dgrid.move(receiver_id, input.key_x and run_speed or walk_speed, input_direction)
 			end
 		end
 	end
@@ -50,36 +50,36 @@ end
 
 function on_input(self, action_id, action)
 	if action.pressed then
-		if action_id == h_str.key_w then
-			input.key_w = 1
-		elseif action_id == h_str.key_a then
-			input.key_a = 2
-		elseif action_id == h_str.key_s then
-			input.key_s = 3
-		elseif action_id == h_str.key_d then
-			input.key_d = 4
-		elseif action_id == h_str.key_lshift then
-			input.key_lshift = true
+		if action_id == h_str.key_up then
+			input.key_up = 1
+		elseif action_id == h_str.key_left then
+			input.key_left = 2
+		elseif action_id == h_str.key_down then
+			input.key_down = 3
+		elseif action_id == h_str.key_right then
+			input.key_right = 4
+		elseif action_id == h_str.key_z then
+			input.key_z = true
+		elseif action_id == h_str.key_x then
+			input.key_x = true
 		elseif action_id == h_str.key_lctrl then
 			input.key_lctrl = true
-		elseif action_id == h_str.key_space then
-			input.key_space = true
 		end
 	elseif action.released then
-		if action_id == h_str.key_w then
-			input.key_w = false
-		elseif action_id == h_str.key_a then
-			input.key_a = false
-		elseif action_id == h_str.key_s then
-			input.key_s = false
-		elseif action_id == h_str.key_d then
-			input.key_d = false
-		elseif action_id == h_str.key_lshift then
-			input.key_lshift = false
+		if action_id == h_str.key_up then
+			input.key_up = false
+		elseif action_id == h_str.key_left then
+			input.key_left = false
+		elseif action_id == h_str.key_down then
+			input.key_down = false
+		elseif action_id == h_str.key_right then
+			input.key_right = false
+		elseif action_id == h_str.key_z then
+			input.key_z = false
+		elseif action_id == h_str.key_x then
+			input.key_x = false
 		elseif action_id == h_str.key_lctrl then
 			input.key_lctrl = false
-		elseif action_id == h_str.key_space then
-			input.key_space = false
 		end
 	end
 end
