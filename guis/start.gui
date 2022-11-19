@@ -273,7 +273,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "gui/start_terraglyph_idle"
+  texture: "gui/start_terraglyphs_idle"
   id: "node_start_terraglyphs"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

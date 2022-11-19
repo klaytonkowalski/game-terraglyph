@@ -76,10 +76,6 @@ animations {
 animations {
   id: "start_party_active"
   images {
-    image: "/assets/images/start_party_0.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
-  images {
     image: "/assets/images/start_party_1.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
@@ -91,13 +87,17 @@ animations {
     image: "/assets/images/start_party_2.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
+  images {
+    image: "/assets/images/start_party_0.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 3
   flip_horizontal: 0
   flip_vertical: 0
 }
 animations {
-  id: "start_terraglyph_idle"
+  id: "start_terraglyphs_idle"
   images {
     image: "/assets/images/start_terraglyphs_0.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
@@ -108,7 +108,7 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "start_terraglyph_active"
+  id: "start_terraglyphs_active"
   images {
     image: "/assets/images/start_terraglyphs_1.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
@@ -197,12 +197,8 @@ animations {
     image: "/assets/images/start_records_0.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
-  images {
-    image: "/assets/images/start_records_0.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 4
+  fps: 3
   flip_horizontal: 0
   flip_vertical: 0
 }

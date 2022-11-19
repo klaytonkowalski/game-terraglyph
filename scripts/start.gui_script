@@ -1,0 +1,48 @@
+local h_str = require "modules.h_str"
+local monarch = require "monarch.monarch"
+
+local node_index = 1
+local nodes =
+{
+	[1] = { id = h_str.node_start_inventory, name = "inventory" },
+	[2] = { id = h_str.node_start_party, name = "party" },
+	[3] = { id = h_str.node_start_terraglyphs, name = "terraglyphs" },
+	[4] = { id = h_str.node_start_map, name = "map" },
+	[5] = { id = h_str.node_start_records, name = "records" },
+	[6] = { id = h_str.node_start_settings, name = "settings" },
+	[7] = { id = h_str.node_start_save, name = "save" }
+}
+
+function set_node_index(index)
+	local previous_node = gui.get_node(nodes[node_index].id)
+	gui.play_flipbook(previous_node, "start_" .. nodes[node_index].name .. "_idle")
+	if index < 1 then
+		node_index = #nodes
+	elseif index > #nodes then
+		node_index = 1
+	else
+		node_index = index
+	end
+	local next_node = gui.get_node(nodes[node_index].id)
+	gui.play_flipbook(next_node, "start_" .. nodes[node_index].name .. "_active")
+	local selector_node = gui.get_node(h_str.node_start_selector)
+	gui.set_position(selector_node, gui.get_position(next_node))
+end
+
+function init(self)
+	msg.post(msg.url(), h_str.acquire_input_focus)
+	set_node_index(1)
+end
+
+function on_input(self, action_id, action)
+	if action.pressed then
+		if action_id == h_str.key_x or action_id == h_str.key_s then
+			monarch.back()
+		elseif action_id == h_str.key_z then
+		elseif action_id == h_str.key_left then
+			set_node_index(node_index - 1)
+		elseif action_id == h_str.key_right then
+			set_node_index(node_index + 1)
+		end
+	end
+end
