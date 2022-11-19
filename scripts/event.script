@@ -1,4 +1,5 @@
 local h_str = require "modules.h_str"
+local monarch = require "monarch.monarch"
 
 local _event_id
 local _coroutine
@@ -31,11 +32,22 @@ local function command_wait(arguments)
 end
 
 local function command_load_dialog(arguments)
-	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "gui"), h_str.message_command_load_dialog, { text = arguments.text })
+	local collection_ready = false
+	monarch.show(h_str.collection_dialog, nil, nil, function()
+		collection_ready = true
+	end)
+	while not collection_ready do
+		coroutine.yield()
+	end
+	msg.post(msg.url(h_str.collection_dialog, hash("/dialog"), "gui"), h_str.message_command_load_dialog, { text = arguments.text })
 end
 
 local function command_start_dialog(arguments)
-	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "gui"), h_str.message_command_start_dialog, { hook = arguments.hook })
+	msg.post(msg.url(h_str.collection_dialog, hash("/dialog"), "gui"), h_str.message_command_start_dialog, { hook = arguments.hook })
+end
+
+local function command_close_dialog(arguments)
+	msg.post(msg.url(h_str.collection_dialog, hash("/dialog"), "gui"), h_str.message_command_close_dialog)
 end
 
 local _commands =
@@ -45,7 +57,8 @@ local _commands =
 	pause = command_pause,
 	wait = command_wait,
 	load_dialog = command_load_dialog,
-	start_dialog = command_start_dialog
+	start_dialog = command_start_dialog,
+	close_dialog = command_close_dialog
 }
 
 local function process()

@@ -1,11 +1,6 @@
 [
-	{ "cmd": "lock", "args": { "id": "player" } },
-	{ "cmd": "load_dialog", "args": { "text": "Just like the classic RPG dialog systems, <color=green>dtypewriter<color=default> is a fantastic dialog solution!<paragraph>It can do all kinds of neat things, like <color=green>colors<color=default>, <speed=3>speeds<speed=default>, and <speed=instant>instant text display<speed=default>, among other things!" } },
+	{ "cmd": "load_dialog", "args": { "text": "Hello, world!" } },
 	{ "cmd": "start_dialog", "args": { "hook": 1 } },
 	{ "cmd": "wait", "args": { "hook": 1 } },
-	{ "cmd": "pause", "args": { "duration": 1 } },
-	{ "cmd": "load_dialog", "args": { "text": "That was one second.<line>Woohoo!" } },
-	{ "cmd": "start_dialog", "args": { "hook": 2 } },
-	{ "cmd": "wait", "args": { "hook": 2 } },
-	{ "cmd": "unlock", "args": { "id": "player" } }
+	{ "cmd": "close_dialog", "args": {} }
 ]

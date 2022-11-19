@@ -2,6 +2,7 @@ local h_str = require "modules.h_str"
 local persist = require "modules.persist"
 local monarch = require "monarch.monarch"
 local dicebag = require "dicebag.dicebag"
+local dtypewriter = require "dtypewriter.dtypewriter"
 
 local function init_randomness()
 	local seed = os.clock() * 100000000000
@@ -13,12 +14,18 @@ local function init_defos()
 	defos.set_fullscreen(persist.get_fullscreen())
 end
 
+local function init_dtypewriter()
+	dtypewriter.set_default_color(vmath.vector4(0.31, 0.26, 0.18, 1))
+	dtypewriter.add_color("green", vmath.vector4(0.26, 0.47, 0.22, 1))
+end
+
 function init(self)
 	msg.post(msg.url(), h_str.acquire_input_focus)
 	msg.post(msg.url(), h_str.init_monarch)
 	persist.init()
 	init_randomness()
 	init_defos()
+	init_dtypewriter()
 end
 
 function on_input(self, action_id, action)

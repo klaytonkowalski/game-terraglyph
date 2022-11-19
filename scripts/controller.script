@@ -14,6 +14,8 @@ local input =
 	key_right = false,
 	key_z = false,
 	key_x = false,
+	key_a = false,
+	key_s = false,
 	key_lctrl = false
 }
 
@@ -62,6 +64,10 @@ function on_input(self, action_id, action)
 			input.key_z = true
 		elseif action_id == h_str.key_x then
 			input.key_x = true
+		elseif action_id == h_str.key_a then
+			input.key_a = true
+		elseif action_id == h_str.key_s then
+			input.key_s = true
 		elseif action_id == h_str.key_lctrl then
 			input.key_lctrl = true
 		end
@@ -78,6 +84,10 @@ function on_input(self, action_id, action)
 			input.key_z = false
 		elseif action_id == h_str.key_x then
 			input.key_x = false
+		elseif action_id == h_str.key_a then
+			input.key_a = false
+		elseif action_id == h_str.key_s then
+			input.key_s = false
 		elseif action_id == h_str.key_lctrl then
 			input.key_lctrl = false
 		end

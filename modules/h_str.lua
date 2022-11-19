@@ -4,6 +4,8 @@ h_str.acquire_input_focus = hash("acquire_input_focus")
 
 h_str.collection_main = hash("collection_main")
 h_str.collection_overworld = hash("collection_overworld")
+h_str.collection_dialog = hash("collection_dialog")
+h_str.collection_start = hash("collection_start")
 
 h_str.init_monarch = hash("init_monarch")
 
@@ -14,6 +16,8 @@ h_str.key_down = hash("key_down")
 h_str.key_right = hash("key_right")
 h_str.key_z = hash("key_z")
 h_str.key_x = hash("key_x")
+h_str.key_a = hash("key_a")
+h_str.key_s = hash("key_s")
 h_str.key_lctrl = hash("key_lctrl")
 
 h_str.message_trigger_event = hash("message_trigger_event")
@@ -26,6 +30,7 @@ h_str.message_command_lock = hash("message_command_lock")
 h_str.message_command_unlock = hash("message_command_unlock")
 h_str.message_command_load_dialog = hash("message_command_load_dialog")
 h_str.message_command_start_dialog = hash("message_command_start_dialog")
+h_str.message_command_close_dialog = hash("message_command_close_dialog")
 
 h_str.animation_idle_up = hash("idle_up")
 h_str.animation_idle_left = hash("idle_left")
@@ -56,5 +61,14 @@ h_str.font_monogram = hash("monogram")
 
 h_str.node_dialog_background = hash("node_dialog_background")
 h_str.node_dialog_spinner = hash("node_dialog_spinner")
+h_str.node_start_background = hash("node_start_background")
+h_str.node_start_selector = hash("node_start_selector")
+h_str.node_start_inventory = hash("node_start_inventory")
+h_str.node_start_party = hash("node_start_party")
+h_str.node_start_terraglyphs = hash("node_start_terraglyphs")
+h_str.node_start_map = hash("node_start_map")
+h_str.node_start_records = hash("node_start_records")
+h_str.node_start_settings = hash("node_start_settings")
+h_str.node_start_save = hash("node_start_save")
 
 return h_str
