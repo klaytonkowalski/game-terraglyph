@@ -61,7 +61,6 @@ h_str.font_monogram = hash("monogram")
 
 h_str.node_dialog_background = hash("node_dialog_background")
 h_str.node_dialog_spinner = hash("node_dialog_spinner")
-h_str.node_start_background = hash("node_start_background")
 h_str.node_start_selector = hash("node_start_selector")
 h_str.node_start_inventory = hash("node_start_inventory")
 h_str.node_start_party = hash("node_start_party")
@@ -70,5 +69,6 @@ h_str.node_start_map = hash("node_start_map")
 h_str.node_start_records = hash("node_start_records")
 h_str.node_start_settings = hash("node_start_settings")
 h_str.node_start_save = hash("node_start_save")
+h_str.node_start_label = hash("node_start_label")
 
 return h_str

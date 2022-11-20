@@ -27,6 +27,8 @@ function set_node_index(index)
 	gui.play_flipbook(next_node, "start_" .. nodes[node_index].name .. "_active")
 	local selector_node = gui.get_node(h_str.node_start_selector)
 	gui.set_position(selector_node, gui.get_position(next_node))
+	local label_node = gui.get_node(h_str.node_start_label)
+	gui.set_text(label_node, string.gsub(nodes[node_index].name, "^%l", string.upper))
 end
 
 function init(self)
