@@ -14,7 +14,7 @@ components {
   }
   properties {
     id: "screen_id"
-    value: "collection_start"
+    value: "collection_inventory"
     type: PROPERTY_TYPE_HASH
   }
   properties {
@@ -22,11 +22,16 @@ components {
     value: "true"
     type: PROPERTY_TYPE_BOOLEAN
   }
+  properties {
+    id: "popup_on_popup"
+    value: "true"
+    type: PROPERTY_TYPE_BOOLEAN
+  }
 }
 embedded_components {
   id: "collectionproxy"
   type: "collectionproxy"
-  data: "collection: \"/collections/start.collection\"\n"
+  data: "collection: \"/collections/inventory.collection\"\n"
   "exclude: false\n"
   ""
   position {
