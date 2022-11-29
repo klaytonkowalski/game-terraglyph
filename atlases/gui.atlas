@@ -280,11 +280,11 @@ animations {
 animations {
   id: "stick_active"
   images {
-    image: "/assets/images/gui_stick_0.png"
+    image: "/assets/images/gui_stick_1.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/assets/images/gui_stick_1.png"
+    image: "/assets/images/gui_stick_0.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_FORWARD

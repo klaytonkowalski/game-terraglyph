@@ -59,7 +59,8 @@ h_str.collision_water = hash("water")
 
 h_str.font_monogram = hash("monogram")
 
-h_str.node_background = hash("node_background")
+h_str.node_dialog_background = hash("node_dialog_background")
+h_str.node_inventory_background = hash("node_inventory_background")
 h_str.node_spinner = hash("node_spinner")
 h_str.node_selector = hash("node_selector")
 h_str.node_inventory = hash("node_inventory")
@@ -70,6 +71,9 @@ h_str.node_records = hash("node_records")
 h_str.node_settings = hash("node_settings")
 h_str.node_save = hash("node_save")
 h_str.node_label = hash("node_label")
-h_str.node_selector = hash("node_selector")
+h_str.node_use = hash("node_use")
+h_str.node_equip = hash("node_equip")
+h_str.node_consume = hash("node_consume")
+h_str.node_drop = hash("node_drop")
 
 return h_str
