@@ -25,6 +25,7 @@ dependencies#4 = https://github.com/rgrams/rendercam/archive/master.zip
 dependencies#5 = https://github.com/klaytonkowalski/library-defold-tilemap-animator/archive/master.zip
 dependencies#6 = https://github.com/klaytonkowalski/library-defold-grid-engine/archive/master.zip
 dependencies#7 = https://github.com/klaytonkowalski/library-defold-typewriter/archive/main.zip
+dependencies#8 = https://github.com/klaytonkowalski/library-defold-colors/archive/master.zip
 
 [input]
 game_binding = /builtins/input/all.input_bindingc

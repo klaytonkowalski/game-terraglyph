@@ -43,6 +43,8 @@ function on_input(self, action_id, action)
 		elseif action_id == h_str.key_x then
 			if node_index == 1 then
 				monarch.show(h_str.collection_inventory)
+			elseif node_index == 2 then
+				monarch.show(h_str.collection_party)
 			end
 		elseif action_id == h_str.key_left then
 			set_node_index(node_index - 1)

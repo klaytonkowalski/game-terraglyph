@@ -17,22 +17,34 @@ local default_data =
 		tile_y = 8,
 		inventory =
 		{
-			[1] = { name = "stick", count = 1 },
-			[2] = { name = "", count = 0 },
-			[3] = { name = "", count = 0 },
-			[4] = { name = "", count = 0 },
-			[5] = { name = "", count = 0 },
-			[6] = { name = "", count = 0 },
-			[7] = { name = "", count = 0 },
-			[8] = { name = "", count = 0 },
-			[9] = { name = "", count = 0 },
-			[10] = { name = "stick", count = 3 },
-			[11] = { name = "", count = 0 },
-			[12] = { name = "", count = 0 },
-			[13] = { name = "", count = 0 },
-			[14] = { name = "", count = 0 },
-			[15] = { name = "", count = 0 },
-			[16] = { name = "", count = 0 }
+			[1] = { key = "stick", count = 3 },
+			[2] = false,
+			[3] = false,
+			[4] = false,
+			[5] = false,
+			[6] = false,
+			[7] = false,
+			[8] = false,
+			[9] = false,
+			[10] = false,
+			[11] = false,
+			[12] = false
+		},
+		party =
+		{
+			[1] =
+			{
+				key = 1,
+				name = "Klayton",
+				health = 12,
+				strength = 1,
+				defense = 1,
+				agility = 2,
+				wonder = 1,
+				terra = 1
+			},
+			[2] = false,
+			[3] = false
 		}
 	}
 }
@@ -65,6 +77,10 @@ end
 
 function persist.get_inventory()
 	return defsave.get("profile", "inventory")
+end
+
+function persist.get_party()
+	return defsave.get("profile", "party")
 end
 
 return persist

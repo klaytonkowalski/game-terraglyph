@@ -1,5 +1,5 @@
 [
-	{ "cmd": "load_dialog", "args": { "text": "Hello, world!" } },
+	{ "cmd": "load_dialog", "args": { "text": "Hello, world!<line>Thing!<line>There's a thing thing." } },
 	{ "cmd": "start_dialog", "args": { "hook": 1 } },
 	{ "cmd": "wait", "args": { "hook": 1 } },
 	{ "cmd": "close_dialog", "args": {} }

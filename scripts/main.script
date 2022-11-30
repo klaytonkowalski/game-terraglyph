@@ -2,6 +2,7 @@ local h_str = require "modules.h_str"
 local persist = require "modules.persist"
 local monarch = require "monarch.monarch"
 local dicebag = require "dicebag.dicebag"
+local dcolors = require "dcolors.dcolors"
 local dtypewriter = require "dtypewriter.dtypewriter"
 
 local function init_randomness()
@@ -14,9 +15,18 @@ local function init_defos()
 	defos.set_fullscreen(persist.get_fullscreen())
 end
 
+local function init_dcolors()
+	dcolors.add_palette("main")
+	dcolors.add_color("main", "brown_1", vmath.vector4(210 / 255, 187 / 255, 147 / 255, 1))
+	dcolors.add_color("main", "brown_2", vmath.vector4(192 / 255, 159 / 255, 103 / 255, 1))
+	dcolors.add_color("main", "brown_3", vmath.vector4(143 / 255, 112 / 255, 59 / 255, 1))
+	dcolors.add_color("main", "brown_4", vmath.vector4(78 / 255, 66 / 255, 45 / 255, 1))
+	dcolors.add_color("main", "green", vmath.vector4(67 / 255, 120 / 255, 56 / 255, 1))
+	dcolors.add_color("main", "red", vmath.vector4(120 / 255, 56 / 255, 56 / 255, 1))
+end
+
 local function init_dtypewriter()
-	dtypewriter.set_default_color(vmath.vector4(0.31, 0.26, 0.18, 1))
-	dtypewriter.add_color("green", vmath.vector4(0.26, 0.47, 0.22, 1))
+	dtypewriter.set_default_color(dcolors.palette.brown_4)
 end
 
 function init(self)
@@ -25,6 +35,7 @@ function init(self)
 	persist.init()
 	init_randomness()
 	init_defos()
+	init_dcolors()
 	init_dtypewriter()
 end
 

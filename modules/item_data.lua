@@ -1,6 +1,4 @@
-local item_data = {}
-
-item_data.data =
+return
 {
 	stick =
 	{
@@ -12,7 +10,7 @@ item_data.data =
 		drop = true,
 		sell = true,
 		market_value = 1,
-		weight = 1,
+		bonus_health = 0,
 		bonus_strength = 1,
 		bonus_defense = 0,
 		bonus_agility = 0,
@@ -20,5 +18,3 @@ item_data.data =
 		bonus_terra = 0
 	}
 }
-
-return item_data
