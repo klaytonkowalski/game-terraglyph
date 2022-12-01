@@ -6,7 +6,7 @@ local _command_hook
 
 function init(self)
 	msg.post(msg.url(), h_str.acquire_input_focus)
-	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 7, 1, 226, 3, 2, msg.url())
+	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 5, 1, 226, 3, 2, msg.url())
 	dtypewriter.set_default_type_speed(30)
 end
 

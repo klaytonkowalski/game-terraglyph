@@ -87,6 +87,51 @@ local function toggle_party_background(flag)
 	end
 end
 
+local function toggle_stats_background(flag)
+	local node_stats_background = gui.get_node(h_str.node_stats_background)
+	gui.set_enabled(node_stats_background, flag)
+	if flag then
+		local player = _party[_party_index]
+		local node_health_stats = gui.get_node(h_str.node_health_stats)
+		local health_stats = player.health_total .. "/" .. player.health_equipment .. "/" .. player.health_level
+		gui.set_text(node_health_stats, health_stats)
+		local node_strength_stats = gui.get_node(h_str.node_strength_stats)
+		local strength_stats = player.strength_total .. "/" .. player.strength_equipment .. "/" .. player.strength_level
+		gui.set_text(node_strength_stats, strength_stats)
+		local node_defense_stats = gui.get_node(h_str.node_defense_stats)
+		local defense_stats = player.defense_total .. "/" .. player.defense_equipment .. "/" .. player.defense_level
+		gui.set_text(node_defense_stats, defense_stats)
+		local node_agility_stats = gui.get_node(h_str.node_agility_stats)
+		local agility_stats = player.agility_total .. "/" .. player.agility_equipment .. "/" .. player.agility_level
+		gui.set_text(node_agility_stats, agility_stats)
+		local node_wonder_stats = gui.get_node(h_str.node_wonder_stats)
+		local wonder_stats = player.wonder_total .. "/" .. player.wonder_equipment .. "/" .. player.wonder_level
+		gui.set_text(node_wonder_stats, wonder_stats)
+		local node_terra_stats = gui.get_node(h_str.node_terra_stats)
+		local terra_stats = player.terra_total .. "/" .. player.terra_equipment .. "/" .. player.terra_level
+		gui.set_text(node_terra_stats, terra_stats)
+		local item = item_data[_inventory[_inventory_index].key]
+		local node_health_delta = gui.get_node(h_str.node_health_delta)
+		gui.set_text(node_health_delta, item.bonus_health > 0 and "+" .. item.bonus_health or item.bonus_health)
+		gui.set_color(node_health_delta, item.bonus_health == 0 and dcolors.palette.brown_4 or (item.bonus_health > 0 and dcolors.palette.green or dcolors.palette.red))
+		local node_strength_delta = gui.get_node(h_str.node_strength_delta)
+		gui.set_text(node_strength_delta, item.bonus_strength > 0 and "+" .. item.bonus_strength or item.bonus_strength)
+		gui.set_color(node_strength_delta, item.bonus_strength == 0 and dcolors.palette.brown_4 or (item.bonus_strength > 0 and dcolors.palette.green or dcolors.palette.red))
+		local node_defense_delta = gui.get_node(h_str.node_defense_delta)
+		gui.set_text(node_defense_delta, item.bonus_defense > 0 and "+" .. item.bonus_defense or item.bonus_defense)
+		gui.set_color(node_defense_delta, item.bonus_defense == 0 and dcolors.palette.brown_4 or (item.bonus_defense > 0 and dcolors.palette.green or dcolors.palette.red))
+		local node_agility_delta = gui.get_node(h_str.node_agility_delta)
+		gui.set_text(node_agility_delta, item.bonus_agility > 0 and "+" .. item.bonus_agility or item.bonus_agility)
+		gui.set_color(node_agility_delta, item.bonus_agility == 0 and dcolors.palette.brown_4 or (item.bonus_agility > 0 and dcolors.palette.green or dcolors.palette.red))
+		local node_wonder_delta = gui.get_node(h_str.node_wonder_delta)
+		gui.set_text(node_wonder_delta, item.bonus_wonder > 0 and "+" .. item.bonus_wonder or item.bonus_wonder)
+		gui.set_color(node_wonder_delta, item.bonus_wonder == 0 and dcolors.palette.brown_4 or (item.bonus_wonder > 0 and dcolors.palette.green or dcolors.palette.red))
+		local node_terra_delta = gui.get_node(h_str.node_terra_delta)
+		gui.set_text(node_terra_delta, item.bonus_terra > 0 and "+" .. item.bonus_terra or item.bonus_terra)
+		gui.set_color(node_terra_delta, item.bonus_terra == 0 and dcolors.palette.brown_4 or (item.bonus_terra > 0 and dcolors.palette.green or dcolors.palette.red))
+	end
+end
+
 local function select_inventory_index(index)
 	if _inventory[_inventory_index] then
 		gui.play_flipbook(gui.get_node(hash("node_item_" .. _inventory_index)), _inventory[_inventory_index].key .. "_idle")
@@ -107,7 +152,7 @@ local function select_inventory_index(index)
 		dtypewriter.load(next_item_data.description)
 		dtypewriter.start()
 	end
-	local selector_node = gui.get_node(h_str.node_selector)
+	local selector_node = gui.get_node(h_str.node_selector_1)
 	gui.set_position(selector_node, gui.get_position(next_node))
 end
 
@@ -137,11 +182,12 @@ local function select_party_index(index)
 	end
 	local next_node = gui.get_node(_party_ids[_party_index])
 	gui.set_color(next_node, dcolors.palette.brown_1)
+	toggle_stats_background(true)
 end
 
 function init(self)
 	msg.post(msg.url(), h_str.acquire_input_focus)
-	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 7, 1, 226, 3, 2, msg.url())
+	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 5, 1, 226, 3, 2, msg.url())
 	dtypewriter.set_default_type_speed(0)
 	load_inventory()
 	load_party()
@@ -200,6 +246,7 @@ function on_input(self, action_id, action)
 			elseif action_id == h_str.key_z then
 				_state = _state_action
 				toggle_party_background(false)
+				toggle_stats_background(false)
 			elseif action_id == h_str.key_x then
 				-- todo
 			end

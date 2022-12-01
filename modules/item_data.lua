@@ -15,6 +15,12 @@ return
 		bonus_defense = 0,
 		bonus_agility = 0,
 		bonus_wonder = 0,
-		bonus_terra = 0
+		bonus_terra = 0,
+		require_health = 0,
+		require_strength = 0,
+		require_defense = 0,
+		require_agility = 0,
+		require_wonder = 0,
+		require_terra = 0
 	}
 }
