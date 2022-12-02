@@ -98,8 +98,8 @@ h_str.node_head = hash("node_head")
 h_str.node_torso = hash("node_torso")
 h_str.node_trunk = hash("node_trunk")
 h_str.node_feet = hash("node_feet")
-h_str.node_accessory_1 = hash("node_accessory_1")
-h_str.node_accessory_2 = hash("node_accessory_2")
-h_str.node_accessory_3 = hash("node_accessory_3")
+h_str.node_ring = hash("node_ring")
+h_str.node_bracelet = hash("node_bracelet")
+h_str.node_necklace = hash("node_necklace")
 
 return h_str

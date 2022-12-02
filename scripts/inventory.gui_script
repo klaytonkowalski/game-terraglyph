@@ -43,93 +43,59 @@ local function load_party()
 	end
 end
 
-local function toggle_action_background(flag)
-	local node_action_background = gui.get_node(h_str.node_action_background)
-	gui.set_enabled(node_action_background, flag)
-	if flag then
-		_action_index = 1
-		_action_ids = {}
-		local node_use = gui.get_node(h_str.node_use)
-		local node_equip = gui.get_node(h_str.node_equip)
-		local node_consume = gui.get_node(h_str.node_consume)
-		local node_drop = gui.get_node(h_str.node_drop)
-		gui.set_color(node_use, dcolors.palette.brown_3)
-		gui.set_color(node_equip, dcolors.palette.brown_3)
-		gui.set_color(node_equip, dcolors.palette.brown_3)
-		gui.set_color(node_equip, dcolors.palette.brown_3)
-		local data = item_data[_inventory[_inventory_index].key]
-		if data.use then
-			gui.set_color(node_use, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_use
-		end
-		if data.equip then
-			gui.set_color(node_equip, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_equip
-		end
-		if data.consume then
-			gui.set_color(node_consume, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_consume
-		end
-		if data.drop then
-			gui.set_color(node_drop, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_drop
+local function calculate_equipment_stats(player)
+	local result =
+	{
+		totals = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		hands = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		head = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		torso = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		trunk = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		feet = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		ring = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		bracelet = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 },
+		necklace = { health = 0, strength = 0, defense = 0, agility = 0, wonder = 0, terra = 0 }
+	}
+	for _, category in ipairs({ "hands", "head", "torso", "trunk", "feet", "ring", "bracelet", "necklace" }) do
+		local item_key = player[category .. "_key"]
+		if item_key then
+			local item = item_data[item_key]
+			for _, stat in ipairs({ "health", "strength", "defense", "agility", "wonder", "terra" }) do
+				result.totals[stat] = result.totals[stat] + item["equipment_" .. stat]
+				result[category][stat] = result[category][stat] + item["equipment_" .. stat]
+			end
 		end
 	end
+	return result
 end
 
-local function toggle_party_background(flag)
-	local node_party_background = gui.get_node(h_str.node_party_background)
-	gui.set_enabled(node_party_background, flag)
-	if flag then
-		_party_index = 1
-		local node_party_x = gui.get_node(hash("node_party_" .. _party_index))
-		gui.set_color(node_party_x, dcolors.palette.brown_4)
+local function refresh_stats_background()
+	local item = item_data[_inventory[_inventory_index].key]
+	local player = _party[_party_index]
+	local equipment_stats = calculate_equipment_stats(player)
+	for _, stat in ipairs({ "health", "strength", "defense", "agility", "wonder", "terra" }) do
+		local x_stats_node = gui.get_node(h_str["node_" .. stat .. "_stats"])
+		local x_stats_string =  player[stat .. "_level"] + equipment_stats.totals[stat] .. " " .. equipment_stats.totals[stat] .. "/" .. player[stat .. "_level"]
+		gui.set_text(x_stats_node, x_stats_string)
+		local x_delta_node = gui.get_node(h_str["node_" .. stat .. "_delta"])
+		local x_delta_value = item["equipment_" .. stat] - equipment_stats[item.equipment_category][stat]
+		gui.set_text(x_delta_node, x_delta_value > 0 and "+" .. x_delta_value or x_delta_value)
+		gui.set_color(x_delta_node, x_delta_value == 0 and dcolors.palette.brown_4 or (x_delta_value > 0 and dcolors.palette.green or dcolors.palette.red))
 	end
-end
-
-local function toggle_stats_background(flag)
-	local node_stats_background = gui.get_node(h_str.node_stats_background)
-	gui.set_enabled(node_stats_background, flag)
-	if flag then
-		local player = _party[_party_index]
-		local node_health_stats = gui.get_node(h_str.node_health_stats)
-		local health_stats = player.health_total .. "/" .. player.health_equipment .. "/" .. player.health_level
-		gui.set_text(node_health_stats, health_stats)
-		local node_strength_stats = gui.get_node(h_str.node_strength_stats)
-		local strength_stats = player.strength_total .. "/" .. player.strength_equipment .. "/" .. player.strength_level
-		gui.set_text(node_strength_stats, strength_stats)
-		local node_defense_stats = gui.get_node(h_str.node_defense_stats)
-		local defense_stats = player.defense_total .. "/" .. player.defense_equipment .. "/" .. player.defense_level
-		gui.set_text(node_defense_stats, defense_stats)
-		local node_agility_stats = gui.get_node(h_str.node_agility_stats)
-		local agility_stats = player.agility_total .. "/" .. player.agility_equipment .. "/" .. player.agility_level
-		gui.set_text(node_agility_stats, agility_stats)
-		local node_wonder_stats = gui.get_node(h_str.node_wonder_stats)
-		local wonder_stats = player.wonder_total .. "/" .. player.wonder_equipment .. "/" .. player.wonder_level
-		gui.set_text(node_wonder_stats, wonder_stats)
-		local node_terra_stats = gui.get_node(h_str.node_terra_stats)
-		local terra_stats = player.terra_total .. "/" .. player.terra_equipment .. "/" .. player.terra_level
-		gui.set_text(node_terra_stats, terra_stats)
-		local item = item_data[_inventory[_inventory_index].key]
-		local node_health_delta = gui.get_node(h_str.node_health_delta)
-		gui.set_text(node_health_delta, item.bonus_health > 0 and "+" .. item.bonus_health or item.bonus_health)
-		gui.set_color(node_health_delta, item.bonus_health == 0 and dcolors.palette.brown_4 or (item.bonus_health > 0 and dcolors.palette.green or dcolors.palette.red))
-		local node_strength_delta = gui.get_node(h_str.node_strength_delta)
-		gui.set_text(node_strength_delta, item.bonus_strength > 0 and "+" .. item.bonus_strength or item.bonus_strength)
-		gui.set_color(node_strength_delta, item.bonus_strength == 0 and dcolors.palette.brown_4 or (item.bonus_strength > 0 and dcolors.palette.green or dcolors.palette.red))
-		local node_defense_delta = gui.get_node(h_str.node_defense_delta)
-		gui.set_text(node_defense_delta, item.bonus_defense > 0 and "+" .. item.bonus_defense or item.bonus_defense)
-		gui.set_color(node_defense_delta, item.bonus_defense == 0 and dcolors.palette.brown_4 or (item.bonus_defense > 0 and dcolors.palette.green or dcolors.palette.red))
-		local node_agility_delta = gui.get_node(h_str.node_agility_delta)
-		gui.set_text(node_agility_delta, item.bonus_agility > 0 and "+" .. item.bonus_agility or item.bonus_agility)
-		gui.set_color(node_agility_delta, item.bonus_agility == 0 and dcolors.palette.brown_4 or (item.bonus_agility > 0 and dcolors.palette.green or dcolors.palette.red))
-		local node_wonder_delta = gui.get_node(h_str.node_wonder_delta)
-		gui.set_text(node_wonder_delta, item.bonus_wonder > 0 and "+" .. item.bonus_wonder or item.bonus_wonder)
-		gui.set_color(node_wonder_delta, item.bonus_wonder == 0 and dcolors.palette.brown_4 or (item.bonus_wonder > 0 and dcolors.palette.green or dcolors.palette.red))
-		local node_terra_delta = gui.get_node(h_str.node_terra_delta)
-		gui.set_text(node_terra_delta, item.bonus_terra > 0 and "+" .. item.bonus_terra or item.bonus_terra)
-		gui.set_color(node_terra_delta, item.bonus_terra == 0 and dcolors.palette.brown_4 or (item.bonus_terra > 0 and dcolors.palette.green or dcolors.palette.red))
+	for _, category in ipairs({ "hands", "head", "torso", "trunk", "feet", "ring", "bracelet", "necklace" }) do
+		local x_node = gui.get_node(h_str["node_" .. category])
+		if player[category .. "_key"] then
+			local animation = player[category .. "_key"] .. (item.equipment_category == category and "_active" or "_idle")
+			gui.play_flipbook(x_node, animation)
+			gui.set_enabled(x_node, true)
+		else
+			gui.set_enabled(x_node, false)
+		end
 	end
+	local node_selector = gui.get_node(h_str.node_selector_2)
+	local node_selectee = gui.get_node(hash("node_" .. item.equipment_category))
+	local selector_position = gui.get_position(node_selectee)
+	gui.set_position(node_selector, selector_position)
 end
 
 local function select_inventory_index(index)
@@ -182,7 +148,59 @@ local function select_party_index(index)
 	end
 	local next_node = gui.get_node(_party_ids[_party_index])
 	gui.set_color(next_node, dcolors.palette.brown_1)
-	toggle_stats_background(true)
+	refresh_stats_background()
+end
+
+local function toggle_action_background(flag)
+	local node_action_background = gui.get_node(h_str.node_action_background)
+	gui.set_enabled(node_action_background, flag)
+	if flag then
+		_action_ids = {}
+		local node_use = gui.get_node(h_str.node_use)
+		gui.set_color(node_use, dcolors.palette.brown_3)
+		local node_equip = gui.get_node(h_str.node_equip)
+		gui.set_color(node_equip, dcolors.palette.brown_3)
+		local node_consume = gui.get_node(h_str.node_consume)
+		gui.set_color(node_consume, dcolors.palette.brown_3)
+		local node_drop = gui.get_node(h_str.node_drop)
+		gui.set_color(node_drop, dcolors.palette.brown_3)
+		local data = item_data[_inventory[_inventory_index].key]
+		if data.use then
+			gui.set_color(node_use, dcolors.palette.brown_4)
+			_action_ids[#_action_ids + 1] = h_str.node_use
+		end
+		if data.equip then
+			gui.set_color(node_equip, dcolors.palette.brown_4)
+			_action_ids[#_action_ids + 1] = h_str.node_equip
+		end
+		if data.consume then
+			gui.set_color(node_consume, dcolors.palette.brown_4)
+			_action_ids[#_action_ids + 1] = h_str.node_consume
+		end
+		if data.drop then
+			gui.set_color(node_drop, dcolors.palette.brown_4)
+			_action_ids[#_action_ids + 1] = h_str.node_drop
+		end
+		select_action_index(1)
+	end
+end
+
+local function toggle_party_background(flag)
+	local node_party_background = gui.get_node(h_str.node_party_background)
+	gui.set_enabled(node_party_background, flag)
+	if flag then
+		local node_party_x = gui.get_node(hash("node_party_" .. _party_index))
+		gui.set_color(node_party_x, dcolors.palette.brown_4)
+		select_party_index(1)
+	end
+end
+
+local function toggle_stats_background(flag)
+	local node_stats_background = gui.get_node(h_str.node_stats_background)
+	gui.set_enabled(node_stats_background, flag)
+	if flag then
+		refresh_stats_background()
+	end
 end
 
 function init(self)
@@ -212,7 +230,6 @@ function on_input(self, action_id, action)
 				if _inventory[_inventory_index] then
 					_state = _state_action
 					toggle_action_background(true)
-					select_action_index(1)
 				end
 			end
 		elseif _state == _state_action then
@@ -229,11 +246,10 @@ function on_input(self, action_id, action)
 				elseif _action_ids[_action_index] == h_str.node_equip then
 					_state = _state_party
 					toggle_party_background(true)
-					select_party_index(1)
+					toggle_stats_background(true)
 				elseif _action_ids[_action_index] == h_str.node_consume then
 					_state = _state_party
 					toggle_party_background(true)
-					select_party_index(1)
 				elseif _action_ids[_action_index] == h_str.node_drop then
 					-- todo
 				end

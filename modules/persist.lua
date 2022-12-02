@@ -18,14 +18,14 @@ local default_data =
 		inventory =
 		{
 			[1] = { key = "stick", count = 1 },
-			[2] = { key = "stick", count = 1 },
+			[2] = false,
 			[3] = false,
 			[4] = false,
 			[5] = false,
 			[6] = false,
 			[7] = false,
 			[8] = false,
-			[9] = { key = "stick", count = 1 },
+			[9] = false,
 			[10] = false,
 			[11] = false,
 			[12] = false
@@ -36,47 +36,39 @@ local default_data =
 			{
 				key = 1,
 				name = "Klayton",
-				health_total = 12,
-				health_equipment = 12,
 				health_level = 12,
-				strength_total = 1,
-				strength_equipment = 1,
 				strength_level = 1,
-				defense_total = 2,
-				defense_equipment = 2,
 				defense_level = 2,
-				agility_total = 2,
-				agility_equipment = 2,
 				agility_level = 2,
-				wonder_total = 1,
-				wonder_equipment = 1,
 				wonder_level = 1,
-				terra_total = 1,
-				terra_equipment = 1,
-				terra_level = 1
+				terra_level = 1,
+				hands_key = false,
+				head_key = false,
+				torso_key = false,
+				trunk_key = false,
+				feet_key = false,
+				ring_key = false,
+				bracelet_key = false,
+				necklace_key = false
 			},
 			[2] =
 			{
 				key = 1,
 				name = "Bosco",
-				health_total = 8,
-				health_equipment = 8,
 				health_level = 8,
-				strength_total = 3,
-				strength_equipment = 3,
 				strength_level = 3,
-				defense_total = 1,
-				defense_equipment = 1,
 				defense_level = 1,
-				agility_total = 1,
-				agility_equipment = 1,
 				agility_level = 1,
-				wonder_total = 3,
-				wonder_equipment = 3,
 				wonder_level = 3,
-				terra_total = 1,
-				terra_equipment = 1,
-				terra_level = 1
+				terra_level = 1,
+				hands_key = "stick",
+				head_key = false,
+				torso_key = false,
+				trunk_key = false,
+				feet_key = false,
+				ring_key = false,
+				bracelet_key = false,
+				necklace_key = false
 			},
 			[3] = false
 		}
@@ -115,6 +107,14 @@ end
 
 function persist.get_party()
 	return defsave.get("profile", "party")
+end
+
+function persist.set_player_equipment(party_index, item_category, item_key)
+	local party = defsave.get("profile", "party")
+	local player = party[party_index]
+	player[item_category .. "_key"] = item_key
+	defsave.set("profile", "party", party)
+	defsave.save("profile")
 end
 
 return persist
