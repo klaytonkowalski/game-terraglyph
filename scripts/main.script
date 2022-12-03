@@ -23,10 +23,13 @@ local function init_dcolors()
 	dcolors.add_color("main", "brown_4", vmath.vector4(78 / 255, 66 / 255, 45 / 255, 1))
 	dcolors.add_color("main", "green", vmath.vector4(67 / 255, 120 / 255, 56 / 255, 1))
 	dcolors.add_color("main", "red", vmath.vector4(120 / 255, 56 / 255, 56 / 255, 1))
+	dcolors.add_color("main", "yellow", vmath.vector4(131 / 255, 120 / 255, 56 / 255, 1))
 end
 
 local function init_dtypewriter()
+	dtypewriter.set_default_type_speed(30)
 	dtypewriter.set_default_color(dcolors.palette.brown_4)
+	dtypewriter.add_color("item", dcolors.palette.yellow)
 end
 
 function init(self)

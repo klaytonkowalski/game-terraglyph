@@ -7,12 +7,11 @@ local _command_hook
 function init(self)
 	msg.post(msg.url(), h_str.acquire_input_focus)
 	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 5, 1, 226, 3, 2, msg.url())
-	dtypewriter.set_default_type_speed(30)
 end
 
 function on_input(self, action_id, action)
 	if action.pressed then
-		if action_id == h_str.key_z or action_id == h_str.key_x then
+		if action_id == h_str.key_z or action_id == h_str.key_x or h_str.key_lctrl then
 			if dtypewriter.is_waiting() then
 				dtypewriter.continue()
 			elseif dtypewriter.is_complete() then

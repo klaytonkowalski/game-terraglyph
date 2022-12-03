@@ -46,7 +46,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "gui/dialog_background"
+  texture: "gui/background"
   id: "node_dialog_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -103,7 +103,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "gui/dialog_spinner"
+  texture: "gui/spinner"
   id: "node_spinner"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

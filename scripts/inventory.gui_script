@@ -43,6 +43,10 @@ local function load_party()
 	end
 end
 
+local function get_item_dialog(item)
+	return "<color=item>" .. item.name .. "<color=default><line>" .. item.description
+end
+
 local function calculate_equipment_stats(player)
 	local result =
 	{
@@ -61,8 +65,8 @@ local function calculate_equipment_stats(player)
 		if item_key then
 			local item = item_data[item_key]
 			for _, stat in ipairs({ "health", "strength", "defense", "agility", "wonder", "terra" }) do
-				result.totals[stat] = result.totals[stat] + item["equipment_" .. stat]
-				result[category][stat] = result[category][stat] + item["equipment_" .. stat]
+				result.totals[stat] = result.totals[stat] + item[stat]
+				result[category][stat] = result[category][stat] + item[stat]
 			end
 		end
 	end
@@ -74,28 +78,47 @@ local function refresh_stats_background()
 	local player = _party[_party_index]
 	local equipment_stats = calculate_equipment_stats(player)
 	for _, stat in ipairs({ "health", "strength", "defense", "agility", "wonder", "terra" }) do
-		local x_stats_node = gui.get_node(h_str["node_" .. stat .. "_stats"])
-		local x_stats_string =  player[stat .. "_level"] + equipment_stats.totals[stat] .. " " .. equipment_stats.totals[stat] .. "/" .. player[stat .. "_level"]
-		gui.set_text(x_stats_node, x_stats_string)
+		local x_total_node = gui.get_node(h_str["node_" .. stat .. "_total"])
+		local x_total_string = equipment_stats.totals[stat] + player[stat]
+		gui.set_text(x_total_node, x_total_string)
+		local x_equipment_node = gui.get_node(h_str["node_" .. stat .. "_equipment"])
+		local x_equipment_string =  equipment_stats.totals[stat]
+		gui.set_text(x_equipment_node, x_equipment_string)
+		local x_level_node = gui.get_node(h_str["node_" .. stat .. "_level"])
+		local x_level_string =  player[stat]
+		gui.set_text(x_level_node, x_level_string)
 		local x_delta_node = gui.get_node(h_str["node_" .. stat .. "_delta"])
-		local x_delta_value = item["equipment_" .. stat] - equipment_stats[item.equipment_category][stat]
+		local x_delta_value = item[stat] - equipment_stats[item.category][stat]
 		gui.set_text(x_delta_node, x_delta_value > 0 and "+" .. x_delta_value or x_delta_value)
 		gui.set_color(x_delta_node, x_delta_value == 0 and dcolors.palette.brown_4 or (x_delta_value > 0 and dcolors.palette.green or dcolors.palette.red))
 	end
 	for _, category in ipairs({ "hands", "head", "torso", "trunk", "feet", "ring", "bracelet", "necklace" }) do
 		local x_node = gui.get_node(h_str["node_" .. category])
 		if player[category .. "_key"] then
-			local animation = player[category .. "_key"] .. (item.equipment_category == category and "_active" or "_idle")
-			gui.play_flipbook(x_node, animation)
 			gui.set_enabled(x_node, true)
+			if item.category == category then
+				gui.play_flipbook(x_node, player[category .. "_key"] .. "_active")
+				local player_item_name = item_data[player[category .. "_key"]].name
+				dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default> and unequip <color=item>" .. player_item_name .. "<color=default>?")
+			else
+				gui.play_flipbook(x_node, player[category .. "_key"] .. "_idle")
+			end
 		else
 			gui.set_enabled(x_node, false)
 		end
 	end
+	if not dtypewriter.is_loaded() then
+		dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default>?")
+	end
+	dtypewriter.start()
 	local node_selector = gui.get_node(h_str.node_selector_2)
-	local node_selectee = gui.get_node(hash("node_" .. item.equipment_category))
+	local node_selectee = gui.get_node(hash("node_" .. item.category))
 	local selector_position = gui.get_position(node_selectee)
 	gui.set_position(node_selector, selector_position)
+end
+
+local function check_equipable(player, item)
+	return player.health >= item.require_health and player.strength >= item.require_strength and player.defense >= item.require_defense and player.agility >= item.require_agility and player.wonder >= item.require_wonder and player.terra >= item.require_terra
 end
 
 local function select_inventory_index(index)
@@ -115,7 +138,8 @@ local function select_inventory_index(index)
 		local next_inventory_data = _inventory[_inventory_index]
 		local next_item_data = item_data[next_inventory_data.key]
 		gui.play_flipbook(next_node, next_inventory_data.key .. "_active")
-		dtypewriter.load(next_item_data.description)
+		local next_item_dialog = get_item_dialog(next_item_data)
+		dtypewriter.load(next_item_dialog)
 		dtypewriter.start()
 	end
 	local selector_node = gui.get_node(h_str.node_selector_1)
@@ -200,13 +224,30 @@ local function toggle_stats_background(flag)
 	gui.set_enabled(node_stats_background, flag)
 	if flag then
 		refresh_stats_background()
+	else
+		local item = item_data[_inventory[_inventory_index].key]
+		local item_dialog = get_item_dialog(item)
+		dtypewriter.load(item_dialog)
+		dtypewriter.start()
+	end
+end
+
+local function on_input_dtypewriter(action_id)
+	if action_id == h_str.key_lctrl then
+		if dtypewriter.is_waiting() then
+			dtypewriter.continue()
+		elseif dtypewriter.is_complete() then
+			local item = item_data[_inventory[_inventory_index].key]
+			local item_dialog = get_item_dialog(item)
+			dtypewriter.load(item_dialog)
+			dtypewriter.start()
+		end
 	end
 end
 
 function init(self)
 	msg.post(msg.url(), h_str.acquire_input_focus)
 	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 5, 1, 226, 3, 2, msg.url())
-	dtypewriter.set_default_type_speed(0)
 	load_inventory()
 	load_party()
 	select_inventory_index(1)
@@ -215,6 +256,7 @@ end
 function on_input(self, action_id, action)
 	if action.pressed then
 		if _state == _state_inventory then
+			on_input_dtypewriter(action_id)
 			if action_id == h_str.key_up then
 				select_inventory_index(_inventory_index - 3)
 			elseif action_id == h_str.key_left then
@@ -233,6 +275,7 @@ function on_input(self, action_id, action)
 				end
 			end
 		elseif _state == _state_action then
+			on_input_dtypewriter(action_id)
 			if action_id == h_str.key_up then
 				select_action_index(_action_index - 1)
 			elseif action_id == h_str.key_down then
@@ -247,9 +290,11 @@ function on_input(self, action_id, action)
 					_state = _state_party
 					toggle_party_background(true)
 					toggle_stats_background(true)
+					gui.set_enabled(gui.get_node(h_str.node_spinner), false)
 				elseif _action_ids[_action_index] == h_str.node_consume then
 					_state = _state_party
 					toggle_party_background(true)
+					gui.set_enabled(gui.get_node(h_str.node_spinner), false)
 				elseif _action_ids[_action_index] == h_str.node_drop then
 					-- todo
 				end
@@ -271,5 +316,17 @@ function on_input(self, action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
-	
+	if _state == _state_inventory or _state == _state_action then
+		if message_id == dtypewriter.messages.start then
+			gui.set_enabled(gui.get_node(h_str.node_spinner), false)
+		elseif message_id == dtypewriter.messages.wait then
+			gui.set_enabled(gui.get_node(h_str.node_spinner), true)
+		elseif message_id == dtypewriter.messages.continue then
+			gui.set_enabled(gui.get_node(h_str.node_spinner), false)
+		elseif message_id == dtypewriter.messages.complete then
+			gui.set_enabled(gui.get_node(h_str.node_spinner), true)
+		elseif message_id == dtypewriter.messages.clear then
+			gui.set_enabled(gui.get_node(h_str.node_spinner), false)
+		end
+	end
 end

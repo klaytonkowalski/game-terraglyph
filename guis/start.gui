@@ -46,7 +46,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "gui/dialog_background"
+  texture: "gui/background"
   id: "node_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

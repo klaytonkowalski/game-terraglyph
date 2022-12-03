@@ -1,5 +1,5 @@
 animations {
-  id: "dialog_background"
+  id: "background"
   images {
     image: "/assets/images/gui_background.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
@@ -10,7 +10,7 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "dialog_spinner"
+  id: "spinner"
   images {
     image: "/assets/images/gui_spinner_0.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
