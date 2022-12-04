@@ -1,31 +1,74 @@
-local h_str = require "modules.h_str"
-local item_data = require "modules.item_data"
-local persist = require "modules.persist"
-local dcolors = require "dcolors.dcolors"
-local dtypewriter = require "dtypewriter.dtypewriter"
-local monarch = require "monarch.monarch"
+--------------------------------------------------------------------------------
+-- DEPENDENCIES
+--------------------------------------------------------------------------------
 
-local _state_inventory = hash("inventory")
-local _state_action = hash("action")
-local _state_party = hash("party")
+local m_item = require "modules.item"
+local m_persist = require "modules.persist"
+local m_dcolors = require "dcolors.dcolors"
+local m_dtypewriter = require "dtypewriter.dtypewriter"
+local m_monarch = require "monarch.monarch"
 
-local _state = _state_inventory
+--------------------------------------------------------------------------------
+-- CONSTANTS
+--------------------------------------------------------------------------------
 
-local _inventory_index = 1
-local _inventory = {}
+local c_acquire_input_focus = hash("acquire_input_focus")
 
-local _action_index = 1
-local _action_ids = {}
+local c_monogram = hash("monogram")
 
-local _party_index = 1
-local _party_ids = {}
-local _party = {}
+local c_state_inventory = hash("state_inventory")
+local c_state_action = hash("state_action")
+local c_state_party = hash("state_party")
+
+local c_selector_inventory = hash("selector_inventory")
+local c_selector_stats = hash("selector_stats")
+
+local c_dialog_background = hash("dialog_background")
+local c_action_background = hash("action_background")
+local c_party_background = hash("party_background")
+local c_stats_background = hash("stats_background")
+
+local c_use = hash("use")
+local c_consume = hash("consume")
+local c_equip = hash("equip")
+local c_drop = hash("drop")
+
+local c_spinner = hash("spinner")
+
+local c_key_up = hash("key_up")
+local c_key_left = hash("key_left")
+local c_key_down = hash("key_down")
+local c_key_right = hash("key_right")
+local c_key_z = hash("key_z")
+local c_key_x = hash("key_x")
+local c_key_lctrl = hash("key_lctrl")
+local c_key_enter = hash("key_enter")
+
+--------------------------------------------------------------------------------
+-- PROPERTIES
+--------------------------------------------------------------------------------
+
+local p_state = c_state_inventory
+
+local p_inventory_index = 1
+local p_inventory = {}
+
+local p_action_index = 1
+local p_action_ids = {}
+
+local p_party_index = 1
+local p_party_ids = {}
+local p_party = {}
+
+--------------------------------------------------------------------------------
+-- LOCAL FUNCTIONS
+--------------------------------------------------------------------------------
 
 local function load_inventory()
-	_inventory = persist.get_inventory()
-	for index, data in ipairs(_inventory) do
+	p_inventory = m_persist.get_inventory()
+	for index, data in ipairs(p_inventory) do
 		if data then
-			local item_node = gui.get_node(hash("node_item_" .. index))
+			local item_node = gui.get_node(hash("item_" .. index))
 			gui.set_enabled(item_node, true)
 			gui.play_flipbook(item_node, data.key .. "_idle")
 		end
@@ -33,11 +76,11 @@ local function load_inventory()
 end
 
 local function load_party()
-	_party = persist.get_party()
-	for index, data in ipairs(_party) do
+	p_party = m_persist.get_party()
+	for index, data in ipairs(p_party) do
 		if data then
-			_party_ids[#_party_ids + 1] = hash("node_party_" .. index)
-			local party_node = gui.get_node(_party_ids[#_party_ids])
+			p_party_ids[#p_party_ids + 1] = hash("party_" .. index)
+			local party_node = gui.get_node(p_party_ids[#p_party_ids])
 			gui.set_text(party_node, data.name)
 		end
 	end
@@ -63,7 +106,7 @@ local function calculate_equipment_stats(player)
 	for _, category in ipairs({ "hands", "head", "torso", "trunk", "feet", "ring", "bracelet", "necklace" }) do
 		local item_key = player[category .. "_key"]
 		if item_key then
-			local item = item_data[item_key]
+			local item = m_item[item_key]
 			for _, stat in ipairs({ "health", "strength", "defense", "agility", "wonder", "terra" }) do
 				result.totals[stat] = result.totals[stat] + item[stat]
 				result[category][stat] = result[category][stat] + item[stat]
@@ -74,45 +117,47 @@ local function calculate_equipment_stats(player)
 end
 
 local function refresh_stats_background()
-	local item = item_data[_inventory[_inventory_index].key]
-	local player = _party[_party_index]
+	local item = m_item[p_inventory[p_inventory_index].key]
+	local player = p_party[p_party_index]
 	local equipment_stats = calculate_equipment_stats(player)
 	for _, stat in ipairs({ "health", "strength", "defense", "agility", "wonder", "terra" }) do
-		local x_total_node = gui.get_node(h_str["node_" .. stat .. "_total"])
-		local x_total_string = equipment_stats.totals[stat] + player[stat]
-		gui.set_text(x_total_node, x_total_string)
-		local x_equipment_node = gui.get_node(h_str["node_" .. stat .. "_equipment"])
-		local x_equipment_string =  equipment_stats.totals[stat]
-		gui.set_text(x_equipment_node, x_equipment_string)
-		local x_level_node = gui.get_node(h_str["node_" .. stat .. "_level"])
-		local x_level_string =  player[stat]
-		gui.set_text(x_level_node, x_level_string)
-		local x_delta_node = gui.get_node(h_str["node_" .. stat .. "_delta"])
-		local x_delta_value = item[stat] - equipment_stats[item.category][stat]
-		gui.set_text(x_delta_node, x_delta_value > 0 and "+" .. x_delta_value or x_delta_value)
-		gui.set_color(x_delta_node, x_delta_value == 0 and dcolors.palette.brown_4 or (x_delta_value > 0 and dcolors.palette.green or dcolors.palette.red))
+		local level_node = gui.get_node(hash(stat .. "_level"))
+		local level_string = player[stat]
+		gui.set_text(level_node, level_string)
+		local delta_node = gui.get_node(hash(stat .. "_delta"))
+		local delta_value = item[stat] - equipment_stats[item.category][stat]
+		gui.set_text(delta_node, delta_value > 0 and "+" .. delta_value or delta_value)
+		gui.set_color(delta_node, delta_value == 0 and m_dcolors.palette.brown_4 or (delta_value > 0 and m_dcolors.palette.green or m_dcolors.palette.red))
+		local total_node = gui.get_node(hash(stat .. "_total"))
+		local total_string = equipment_stats.totals[stat] + player[stat] + delta_value
+		gui.set_text(total_node, total_string)
+		gui.set_color(total_node, delta_value == 0 and m_dcolors.palette.brown_4 or (delta_value > 0 and m_dcolors.palette.green or m_dcolors.palette.red))
+		local equipment_node = gui.get_node(hash(stat .. "_equipment"))
+		local equipment_string = equipment_stats.totals[stat] + delta_value
+		gui.set_text(equipment_node, equipment_string)
+		gui.set_color(equipment_node, delta_value == 0 and m_dcolors.palette.brown_4 or (delta_value > 0 and m_dcolors.palette.green or m_dcolors.palette.red))
 	end
 	for _, category in ipairs({ "hands", "head", "torso", "trunk", "feet", "ring", "bracelet", "necklace" }) do
-		local x_node = gui.get_node(h_str["node_" .. category])
+		local node = gui.get_node(hash(category))
 		if player[category .. "_key"] then
-			gui.set_enabled(x_node, true)
+			gui.set_enabled(node, true)
 			if item.category == category then
-				gui.play_flipbook(x_node, player[category .. "_key"] .. "_active")
-				local player_item_name = item_data[player[category .. "_key"]].name
-				dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default> and unequip <color=item>" .. player_item_name .. "<color=default>?")
+				gui.play_flipbook(node, player[category .. "_key"] .. "_active")
+				local player_item_name = m_item[player[category .. "_key"]].name
+				m_dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default> and unequip <color=item>" .. player_item_name .. "<color=default>?")
 			else
-				gui.play_flipbook(x_node, player[category .. "_key"] .. "_idle")
+				gui.play_flipbook(node, player[category .. "_key"] .. "_idle")
 			end
 		else
-			gui.set_enabled(x_node, false)
+			gui.set_enabled(node, false)
 		end
 	end
-	if not dtypewriter.is_loaded() then
-		dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default>?")
+	if not m_dtypewriter.is_loaded() then
+		m_dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default>?")
 	end
-	dtypewriter.start()
-	local node_selector = gui.get_node(h_str.node_selector_2)
-	local node_selectee = gui.get_node(hash("node_" .. item.category))
+	m_dtypewriter.start()
+	local node_selector = gui.get_node(c_selector_stats)
+	local node_selectee = gui.get_node(hash(item.category))
 	local selector_position = gui.get_position(node_selectee)
 	gui.set_position(node_selector, selector_position)
 end
@@ -122,132 +167,138 @@ local function check_equipable(player, item)
 end
 
 local function select_inventory_index(index)
-	if _inventory[_inventory_index] then
-		gui.play_flipbook(gui.get_node(hash("node_item_" .. _inventory_index)), _inventory[_inventory_index].key .. "_idle")
-		dtypewriter.clear()
+	if p_inventory[p_inventory_index] then
+		gui.play_flipbook(gui.get_node(hash("item_" .. p_inventory_index)), p_inventory[p_inventory_index].key .. "_idle")
+		m_dtypewriter.clear()
 	end
 	if index < 1 then
-		_inventory_index = #_inventory + index
-	elseif index > #_inventory then
-		_inventory_index = index - #_inventory
+		p_inventory_index = #p_inventory + index
+	elseif index > #p_inventory then
+		p_inventory_index = index - #p_inventory
 	else
-		_inventory_index = index
+		p_inventory_index = index
 	end
-	local next_node = gui.get_node(hash("node_item_" .. _inventory_index))
-	if _inventory[_inventory_index] then
-		local next_inventory_data = _inventory[_inventory_index]
-		local next_item_data = item_data[next_inventory_data.key]
+	local next_node = gui.get_node(hash("item_" .. p_inventory_index))
+	if p_inventory[p_inventory_index] then
+		local next_inventory_data = p_inventory[p_inventory_index]
+		local next_m_item = m_item[next_inventory_data.key]
 		gui.play_flipbook(next_node, next_inventory_data.key .. "_active")
-		local next_item_dialog = get_item_dialog(next_item_data)
-		dtypewriter.load(next_item_dialog)
-		dtypewriter.start()
+		local next_item_dialog = get_item_dialog(next_m_item)
+		m_dtypewriter.load(next_item_dialog)
+		m_dtypewriter.start()
 	end
-	local selector_node = gui.get_node(h_str.node_selector_1)
+	local selector_node = gui.get_node(c_selector_inventory)
 	gui.set_position(selector_node, gui.get_position(next_node))
 end
 
 local function select_action_index(index)
-	local previous_node = gui.get_node(_action_ids[_action_index])
-	gui.set_color(previous_node, dcolors.palette.brown_4)
+	local previous_node = gui.get_node(p_action_ids[p_action_index])
+	gui.set_color(previous_node, m_dcolors.palette.brown_4)
 	if index < 1 then
-		_action_index = #_action_ids + index
-	elseif index > #_action_ids then
-		_action_index = index - #_action_ids
+		p_action_index = #p_action_ids + index
+	elseif index > #p_action_ids then
+		p_action_index = index - #p_action_ids
 	else
-		_action_index = index
+		p_action_index = index
 	end
-	local next_node = gui.get_node(_action_ids[_action_index])
-	gui.set_color(next_node, dcolors.palette.brown_1)
+	local next_node = gui.get_node(p_action_ids[p_action_index])
+	gui.set_color(next_node, m_dcolors.palette.brown_1)
 end
 
 local function select_party_index(index)
-	local previous_node = gui.get_node(_party_ids[_party_index])
-	gui.set_color(previous_node, dcolors.palette.brown_4)
+	local previous_node = gui.get_node(p_party_ids[p_party_index])
+	gui.set_color(previous_node, m_dcolors.palette.brown_4)
 	if index < 1 then
-		_party_index = #_party_ids + index
-	elseif index > #_party_ids then
-		_party_index = index - #_party_ids
+		p_party_index = #p_party_ids + index
+	elseif index > #p_party_ids then
+		p_party_index = index - #p_party_ids
 	else
-		_party_index = index
+		p_party_index = index
 	end
-	local next_node = gui.get_node(_party_ids[_party_index])
-	gui.set_color(next_node, dcolors.palette.brown_1)
+	local next_node = gui.get_node(p_party_ids[p_party_index])
+	gui.set_color(next_node, m_dcolors.palette.brown_1)
 	refresh_stats_background()
 end
 
 local function toggle_action_background(flag)
-	local node_action_background = gui.get_node(h_str.node_action_background)
+	local node_action_background = gui.get_node(c_action_background)
 	gui.set_enabled(node_action_background, flag)
 	if flag then
-		_action_ids = {}
-		local node_use = gui.get_node(h_str.node_use)
-		gui.set_color(node_use, dcolors.palette.brown_3)
-		local node_equip = gui.get_node(h_str.node_equip)
-		gui.set_color(node_equip, dcolors.palette.brown_3)
-		local node_consume = gui.get_node(h_str.node_consume)
-		gui.set_color(node_consume, dcolors.palette.brown_3)
-		local node_drop = gui.get_node(h_str.node_drop)
-		gui.set_color(node_drop, dcolors.palette.brown_3)
-		local data = item_data[_inventory[_inventory_index].key]
+		p_action_ids = {}
+		local node_use = gui.get_node(c_use)
+		gui.set_color(node_use, m_dcolors.palette.brown_3)
+		local node_equip = gui.get_node(c_equip)
+		gui.set_color(node_equip, m_dcolors.palette.brown_3)
+		local node_consume = gui.get_node(c_consume)
+		gui.set_color(node_consume, m_dcolors.palette.brown_3)
+		local node_drop = gui.get_node(c_drop)
+		gui.set_color(node_drop, m_dcolors.palette.brown_3)
+		local data = m_item[p_inventory[p_inventory_index].key]
 		if data.use then
-			gui.set_color(node_use, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_use
+			gui.set_color(node_use, m_dcolors.palette.brown_4)
+			p_action_ids[#p_action_ids + 1] = c_use
 		end
 		if data.equip then
-			gui.set_color(node_equip, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_equip
+			gui.set_color(node_equip, m_dcolors.palette.brown_4)
+			p_action_ids[#p_action_ids + 1] = c_equip
 		end
 		if data.consume then
-			gui.set_color(node_consume, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_consume
+			gui.set_color(node_consume, m_dcolors.palette.brown_4)
+			p_action_ids[#p_action_ids + 1] = c_consume
 		end
 		if data.drop then
-			gui.set_color(node_drop, dcolors.palette.brown_4)
-			_action_ids[#_action_ids + 1] = h_str.node_drop
+			gui.set_color(node_drop, m_dcolors.palette.brown_4)
+			p_action_ids[#p_action_ids + 1] = c_drop
 		end
 		select_action_index(1)
 	end
 end
 
 local function toggle_party_background(flag)
-	local node_party_background = gui.get_node(h_str.node_party_background)
+	local node_party_background = gui.get_node(c_party_background)
 	gui.set_enabled(node_party_background, flag)
+	local node_spinner = gui.get_node(c_spinner)
+	gui.set_enabled(node_spinner, false)
 	if flag then
-		local node_party_x = gui.get_node(hash("node_party_" .. _party_index))
-		gui.set_color(node_party_x, dcolors.palette.brown_4)
+		local node_party_x = gui.get_node(hash("party_" .. p_party_index))
+		gui.set_color(node_party_x, m_dcolors.palette.brown_4)
 		select_party_index(1)
 	end
 end
 
 local function toggle_stats_background(flag)
-	local node_stats_background = gui.get_node(h_str.node_stats_background)
+	local node_stats_background = gui.get_node(c_stats_background)
 	gui.set_enabled(node_stats_background, flag)
 	if flag then
 		refresh_stats_background()
 	else
-		local item = item_data[_inventory[_inventory_index].key]
+		local item = m_item[p_inventory[p_inventory_index].key]
 		local item_dialog = get_item_dialog(item)
-		dtypewriter.load(item_dialog)
-		dtypewriter.start()
+		m_dtypewriter.load(item_dialog)
+		m_dtypewriter.start()
 	end
 end
 
 local function on_input_dtypewriter(action_id)
-	if action_id == h_str.key_lctrl then
-		if dtypewriter.is_waiting() then
-			dtypewriter.continue()
-		elseif dtypewriter.is_complete() then
-			local item = item_data[_inventory[_inventory_index].key]
+	if action_id == c_key_lctrl then
+		if m_dtypewriter.is_waiting() then
+			m_dtypewriter.continue()
+		elseif m_dtypewriter.is_complete() then
+			local item = m_item[p_inventory[p_inventory_index].key]
 			local item_dialog = get_item_dialog(item)
-			dtypewriter.load(item_dialog)
-			dtypewriter.start()
+			m_dtypewriter.load(item_dialog)
+			m_dtypewriter.start()
 		end
 	end
 end
 
+--------------------------------------------------------------------------------
+-- ENGINE FUNCTIONS
+--------------------------------------------------------------------------------
+
 function init(self)
-	msg.post(msg.url(), h_str.acquire_input_focus)
-	dtypewriter.init(h_str.node_dialog_background, h_str.font_monogram, 5, 1, 226, 3, 2, msg.url())
+	msg.post(msg.url(), c_acquire_input_focus)
+	m_dtypewriter.init(c_dialog_background, c_monogram, 5, 1, 226, 3, 2, msg.url())
 	load_inventory()
 	load_party()
 	select_inventory_index(1)
@@ -255,60 +306,58 @@ end
 
 function on_input(self, action_id, action)
 	if action.pressed then
-		if _state == _state_inventory then
+		if p_state == c_state_inventory then
 			on_input_dtypewriter(action_id)
-			if action_id == h_str.key_up then
-				select_inventory_index(_inventory_index - 3)
-			elseif action_id == h_str.key_left then
-				select_inventory_index(_inventory_index % 3 == 1 and _inventory_index + 2 or _inventory_index - 1)
-			elseif action_id == h_str.key_down then
-				select_inventory_index(_inventory_index + 3)
-			elseif action_id == h_str.key_right then
-				select_inventory_index(_inventory_index % 3 == 0 and _inventory_index - 2 or _inventory_index + 1)
-			elseif action_id == h_str.key_z then
-				dtypewriter.clear()
-				monarch.back()
-			elseif action_id == h_str.key_x then
-				if _inventory[_inventory_index] then
-					_state = _state_action
+			if action_id == c_key_up then
+				select_inventory_index(p_inventory_index - 3)
+			elseif action_id == c_key_left then
+				select_inventory_index(p_inventory_index % 3 == 1 and p_inventory_index + 2 or p_inventory_index - 1)
+			elseif action_id == c_key_down then
+				select_inventory_index(p_inventory_index + 3)
+			elseif action_id == c_key_right then
+				select_inventory_index(p_inventory_index % 3 == 0 and p_inventory_index - 2 or p_inventory_index + 1)
+			elseif action_id == c_key_z then
+				m_dtypewriter.clear()
+				m_monarch.back()
+			elseif action_id == c_key_x then
+				if p_inventory[p_inventory_index] then
+					p_state = c_state_action
 					toggle_action_background(true)
 				end
 			end
-		elseif _state == _state_action then
+		elseif p_state == c_state_action then
 			on_input_dtypewriter(action_id)
-			if action_id == h_str.key_up then
-				select_action_index(_action_index - 1)
-			elseif action_id == h_str.key_down then
-				select_action_index(_action_index + 1)
-			elseif action_id == h_str.key_z then
-				_state = _state_inventory
+			if action_id == c_key_up then
+				select_action_index(p_action_index - 1)
+			elseif action_id == c_key_down then
+				select_action_index(p_action_index + 1)
+			elseif action_id == c_key_z then
+				p_state = c_state_inventory
 				toggle_action_background(false)
-			elseif action_id == h_str.key_x then
-				if _action_ids[_action_index] == h_str.node_use then
+			elseif action_id == c_key_x then
+				if p_action_ids[p_action_index] == c_use then
 					-- todo
-				elseif _action_ids[_action_index] == h_str.node_equip then
-					_state = _state_party
+				elseif p_action_ids[p_action_index] == c_equip then
+					p_state = c_state_party
 					toggle_party_background(true)
 					toggle_stats_background(true)
-					gui.set_enabled(gui.get_node(h_str.node_spinner), false)
-				elseif _action_ids[_action_index] == h_str.node_consume then
-					_state = _state_party
+				elseif p_action_ids[p_action_index] == c_consume then
+					p_state = c_state_party
 					toggle_party_background(true)
-					gui.set_enabled(gui.get_node(h_str.node_spinner), false)
-				elseif _action_ids[_action_index] == h_str.node_drop then
+				elseif p_action_ids[p_action_index] == c_drop then
 					-- todo
 				end
 			end
-		elseif _state == _state_party then
-			if action_id == h_str.key_up then
-				select_party_index(_party_index - 1)
-			elseif action_id == h_str.key_down then
-				select_party_index(_party_index + 1)
-			elseif action_id == h_str.key_z then
-				_state = _state_action
+		elseif p_state == c_state_party then
+			if action_id == c_key_up then
+				select_party_index(p_party_index - 1)
+			elseif action_id == c_key_down then
+				select_party_index(p_party_index + 1)
+			elseif action_id == c_key_z then
+				p_state = c_state_action
 				toggle_party_background(false)
 				toggle_stats_background(false)
-			elseif action_id == h_str.key_x then
+			elseif action_id == c_key_x then
 				-- todo
 			end
 		end
@@ -316,17 +365,17 @@ function on_input(self, action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
-	if _state == _state_inventory or _state == _state_action then
-		if message_id == dtypewriter.messages.start then
-			gui.set_enabled(gui.get_node(h_str.node_spinner), false)
-		elseif message_id == dtypewriter.messages.wait then
-			gui.set_enabled(gui.get_node(h_str.node_spinner), true)
-		elseif message_id == dtypewriter.messages.continue then
-			gui.set_enabled(gui.get_node(h_str.node_spinner), false)
-		elseif message_id == dtypewriter.messages.complete then
-			gui.set_enabled(gui.get_node(h_str.node_spinner), true)
-		elseif message_id == dtypewriter.messages.clear then
-			gui.set_enabled(gui.get_node(h_str.node_spinner), false)
+	if p_state == c_state_inventory or p_state == c_state_action then
+		if message_id == m_dtypewriter.messages.start then
+			gui.set_enabled(gui.get_node(c_spinner), false)
+		elseif message_id == m_dtypewriter.messages.wait then
+			gui.set_enabled(gui.get_node(c_spinner), true)
+		elseif message_id == m_dtypewriter.messages.continue then
+			gui.set_enabled(gui.get_node(c_spinner), false)
+		elseif message_id == m_dtypewriter.messages.complete then
+			gui.set_enabled(gui.get_node(c_spinner), true)
+		elseif message_id == m_dtypewriter.messages.clear then
+			gui.set_enabled(gui.get_node(c_spinner), false)
 		end
 	end
 end

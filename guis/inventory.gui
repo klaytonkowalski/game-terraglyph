@@ -47,7 +47,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/background"
-  id: "node_inventory_background"
+  id: "inventory_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_SW
@@ -105,7 +105,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Section 1"
   font: "monogram"
-  id: "node_section"
+  id: "section"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_N
@@ -123,7 +123,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -170,12 +170,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "node_selector_1"
+  id: "selector_inventory"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -228,12 +228,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_1"
+  id: "item_1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -286,12 +286,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_2"
+  id: "item_2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -344,12 +344,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_3"
+  id: "item_3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -402,12 +402,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_4"
+  id: "item_4"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -460,12 +460,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_5"
+  id: "item_5"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -518,12 +518,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_6"
+  id: "item_6"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -576,12 +576,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_7"
+  id: "item_7"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -634,12 +634,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_8"
+  id: "item_8"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -692,12 +692,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_9"
+  id: "item_9"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -750,12 +750,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_10"
+  id: "item_10"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -808,12 +808,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_11"
+  id: "item_11"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -866,12 +866,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_idle"
-  id: "node_item_12"
+  id: "item_12"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_inventory_background"
+  parent: "inventory_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -924,7 +924,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/background"
-  id: "node_dialog_background"
+  id: "dialog_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -981,7 +981,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/spinner"
-  id: "node_spinner"
+  id: "spinner"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -1038,7 +1038,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/background"
-  id: "node_action_background"
+  id: "action_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_SE
@@ -1096,7 +1096,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Use"
   font: "monogram"
-  id: "node_use"
+  id: "use"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1114,7 +1114,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_action_background"
+  parent: "action_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1162,7 +1162,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Equip"
   font: "monogram"
-  id: "node_equip"
+  id: "equip"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1180,7 +1180,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_action_background"
+  parent: "action_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1228,7 +1228,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Consume"
   font: "monogram"
-  id: "node_consume"
+  id: "consume"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1246,7 +1246,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_action_background"
+  parent: "action_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1294,7 +1294,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Drop"
   font: "monogram"
-  id: "node_drop"
+  id: "drop"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1312,7 +1312,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_action_background"
+  parent: "action_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1359,7 +1359,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/background"
-  id: "node_party_background"
+  id: "party_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_SE
@@ -1417,7 +1417,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: ""
   font: "monogram"
-  id: "node_party_1"
+  id: "party_1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1435,7 +1435,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_party_background"
+  parent: "party_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1483,7 +1483,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: ""
   font: "monogram"
-  id: "node_party_2"
+  id: "party_2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1501,7 +1501,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_party_background"
+  parent: "party_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1549,7 +1549,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: ""
   font: "monogram"
-  id: "node_party_3"
+  id: "party_3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1567,7 +1567,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_party_background"
+  parent: "party_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1614,7 +1614,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/background"
-  id: "node_stats_background"
+  id: "stats_background"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1672,7 +1672,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Health"
   font: "monogram"
-  id: "node_health"
+  id: "health"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -1690,7 +1690,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1738,7 +1738,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "9999"
   font: "monogram"
-  id: "node_health_total"
+  id: "health_total"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -1756,7 +1756,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1804,7 +1804,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "999"
   font: "monogram"
-  id: "node_health_equipment"
+  id: "health_equipment"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -1822,7 +1822,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1870,7 +1870,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "99"
   font: "monogram"
-  id: "node_health_level"
+  id: "health_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -1888,7 +1888,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -1936,7 +1936,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "+9999"
   font: "monogram"
-  id: "node_health_delta"
+  id: "health_delta"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -1954,7 +1954,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2002,7 +2002,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Strength"
   font: "monogram"
-  id: "node_strength"
+  id: "strength"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -2020,7 +2020,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2068,7 +2068,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "9999"
   font: "monogram"
-  id: "node_strength_total"
+  id: "strength_total"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2086,7 +2086,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2134,7 +2134,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "999"
   font: "monogram"
-  id: "node_strength_equipment"
+  id: "strength_equipment"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2152,7 +2152,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2200,7 +2200,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "99"
   font: "monogram"
-  id: "node_strength_level"
+  id: "strength_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2218,7 +2218,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2266,7 +2266,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "+9999"
   font: "monogram"
-  id: "node_strength_delta"
+  id: "strength_delta"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2284,7 +2284,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2332,7 +2332,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Defense"
   font: "monogram"
-  id: "node_defense"
+  id: "defense"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -2350,7 +2350,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2398,7 +2398,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "9999"
   font: "monogram"
-  id: "node_defense_total"
+  id: "defense_total"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2416,7 +2416,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2464,7 +2464,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "999"
   font: "monogram"
-  id: "node_defense_equipment"
+  id: "defense_equipment"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2482,7 +2482,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2530,7 +2530,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "99"
   font: "monogram"
-  id: "node_defense_level"
+  id: "defense_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2548,7 +2548,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2596,7 +2596,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "+9999"
   font: "monogram"
-  id: "node_defense_delta"
+  id: "defense_delta"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2614,7 +2614,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2662,7 +2662,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Agility"
   font: "monogram"
-  id: "node_agility"
+  id: "agility"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -2680,7 +2680,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2728,7 +2728,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "9999"
   font: "monogram"
-  id: "node_agility_total"
+  id: "agility_total"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2746,7 +2746,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2794,7 +2794,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "999"
   font: "monogram"
-  id: "node_agility_equipment"
+  id: "agility_equipment"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2812,7 +2812,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2860,7 +2860,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "99"
   font: "monogram"
-  id: "node_agility_level"
+  id: "agility_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2878,7 +2878,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2926,7 +2926,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "+9999"
   font: "monogram"
-  id: "node_agility_delta"
+  id: "agility_delta"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -2944,7 +2944,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -2992,7 +2992,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Wonder"
   font: "monogram"
-  id: "node_wonder"
+  id: "wonder"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -3010,7 +3010,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3058,7 +3058,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "9999"
   font: "monogram"
-  id: "node_wonder_total"
+  id: "wonder_total"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3076,7 +3076,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3124,7 +3124,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "999"
   font: "monogram"
-  id: "node_wonder_equipment"
+  id: "wonder_equipment"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3142,7 +3142,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3190,7 +3190,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "99"
   font: "monogram"
-  id: "node_wonder_level"
+  id: "wonder_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3208,7 +3208,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3256,7 +3256,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "+9999"
   font: "monogram"
-  id: "node_wonder_delta"
+  id: "wonder_delta"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3274,7 +3274,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3322,7 +3322,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Terra"
   font: "monogram"
-  id: "node_terra"
+  id: "terra"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NW
@@ -3340,7 +3340,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3388,7 +3388,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "9999"
   font: "monogram"
-  id: "node_terra_total"
+  id: "terra_total"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3406,7 +3406,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3454,7 +3454,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "999"
   font: "monogram"
-  id: "node_terra_equipment"
+  id: "terra_equipment"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3472,7 +3472,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3520,7 +3520,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "99"
   font: "monogram"
-  id: "node_terra_level"
+  id: "terra_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3538,7 +3538,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3586,7 +3586,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "+9999"
   font: "monogram"
-  id: "node_terra_delta"
+  id: "terra_delta"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_NE
@@ -3604,7 +3604,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -3651,12 +3651,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
-  id: "node_selector_2"
+  id: "selector_stats"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -3709,12 +3709,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_hands"
+  id: "hands"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -3767,12 +3767,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_head"
+  id: "head"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -3825,12 +3825,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_torso"
+  id: "torso"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -3883,12 +3883,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_trunk"
+  id: "trunk"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -3941,12 +3941,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_feet"
+  id: "feet"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -3999,12 +3999,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_ring"
+  id: "ring"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -4057,12 +4057,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_bracelet"
+  id: "bracelet"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -4115,12 +4115,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/stick_active"
-  id: "node_necklace"
+  id: "necklace"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "node_stats_background"
+  parent: "stats_background"
   layer: ""
   inherit_alpha: true
   slice9 {

@@ -1,4 +1,4 @@
-name: "collection_dialog"
+name: "dialog"
 instances {
   id: "dialog"
   prototype: "/objects/dialog.go"

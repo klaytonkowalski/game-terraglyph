@@ -14,7 +14,7 @@ components {
   }
   properties {
     id: "screen_id"
-    value: "collection_start"
+    value: "start"
     type: PROPERTY_TYPE_HASH
   }
   properties {

@@ -17,6 +17,7 @@ title = Terraglyph
 publisher = Klayton Kowalski
 developer = Klayton Kowalski
 custom_resources = /assets/events
+version = 1.0.0
 dependencies#0 = https://github.com/britzl/monarch/archive/master.zip
 dependencies#1 = https://github.com/subsoap/defos/archive/v2.6.0.zip
 dependencies#2 = https://github.com/subsoap/defsave/archive/v1.2.3.zip

@@ -1,4 +1,4 @@
-name: "default"
+name: "inventory"
 instances {
   id: "inventory"
   prototype: "/objects/inventory.go"

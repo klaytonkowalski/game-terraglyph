@@ -1,4 +1,4 @@
-name: "collection_overworld"
+name: "overworld"
 instances {
   id: "camera_overworld"
   prototype: "/rendercam/camera.go"

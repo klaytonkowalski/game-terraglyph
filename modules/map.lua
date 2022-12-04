@@ -1,7 +1,11 @@
-local map_data = {}
+--------------------------------------------------------------------------------
+-- PROPERTIES
+--------------------------------------------------------------------------------
+
+local p_map = {}
 
 -- Indexed by tilesource id -> tile id.
-map_data.animations =
+p_map.animations =
 {
 	[1] =
 	{
@@ -10,7 +14,7 @@ map_data.animations =
 }
 
 -- Indexed by tilesource id -> tile id.
-map_data.tilesources =
+p_map.tilesources =
 {
 	[1] =
 	{
@@ -47,13 +51,13 @@ map_data.tilesources =
 }
 
 -- Indexed by map id.
-map_data.map_to_tilesource =
+p_map.map_to_tilesource =
 {
 	[1] = 1
 }
 
 -- Indexed by map id.
-map_data.tiles =
+p_map.tiles =
 {
 	[1] =
 	{
@@ -61,4 +65,4 @@ map_data.tiles =
 	}
 }
 
-return map_data
+return p_map

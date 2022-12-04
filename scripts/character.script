@@ -1,27 +1,65 @@
-local h_str = require "modules.h_str"
-local dgrid = require "dgrid.dgrid"
-local dtile = require "dtile.dtile"
+--------------------------------------------------------------------------------
+-- DEPENDENCIES
+--------------------------------------------------------------------------------
 
-local walk_speed = 3
-local run_speed = 6
+local m_dgrid = require "dgrid.dgrid"
+local m_dtile = require "dtile.dtile"
+
+--------------------------------------------------------------------------------
+-- CONSTANTS
+--------------------------------------------------------------------------------
+
+local c_walk_speed = 3
+local c_run_speed = 6
+
+local c_idle_up = hash("idle_up")
+local c_idle_left = hash("idle_left")
+local c_idle_down = hash("idle_down")
+
+local c_walk_up_left = hash("walk_up_left")
+local c_walk_up_right = hash("walk_up_right")
+local c_walk_left_left = hash("walk_left_left")
+local c_walk_left_right = hash("walk_left_right")
+local c_walk_down_left = hash("walk_down_left")
+local c_walk_down_right = hash("walk_down_right")
+
+local c_run_up_left = hash("run_up_left")
+local c_run_up_right = hash("run_up_right")
+local c_run_left_left = hash("run_left_left")
+local c_run_left_right = hash("run_left_right")
+local c_run_down_left = hash("run_down_left")
+local c_run_down_right = hash("run_down_right")
+
+local c_collision = hash("collision")
+local c_terrain = hash("terrain")
+local c_object = hash("object")
+local c_canopy = hash("canopy")
+
+--------------------------------------------------------------------------------
+-- PROPERTIES
+--------------------------------------------------------------------------------
 
 go.property("direction", 3)
 go.property("event_id", 0)
+
+--------------------------------------------------------------------------------
+-- LOCAL FUNCTIONS
+--------------------------------------------------------------------------------
 
 local function animate_turn(direction)
 	local url = msg.url(nil, nil, "sprite")
 	if direction == 1 then
 		sprite.set_hflip(url, false)
-		sprite.play_flipbook(url, h_str.animation_idle_up)
+		sprite.play_flipbook(url, c_idle_up)
 	elseif direction == 2 then
 		sprite.set_hflip(url, false)
-		sprite.play_flipbook(url, h_str.animation_idle_left)
+		sprite.play_flipbook(url, c_idle_left)
 	elseif direction == 3 then
 		sprite.set_hflip(url, false)
-		sprite.play_flipbook(url, h_str.animation_idle_down)
+		sprite.play_flipbook(url, c_idle_down)
 	elseif direction == 4 then
 		sprite.set_hflip(url, true)
-		sprite.play_flipbook(url, h_str.animation_idle_left)
+		sprite.play_flipbook(url, c_idle_left)
 	end
 end
 
@@ -29,47 +67,47 @@ local function animate_move_start(self, direction, speed)
 	local url = msg.url(nil, nil, "sprite")
 	if direction == 1 then
 		sprite.set_hflip(url, false)
-		if speed == walk_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_up_left or h_str.animation_walk_up_right)
-		elseif speed == run_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_up_left or h_str.animation_run_up_right)
+		if speed == c_walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_walk_up_left or c_walk_up_right)
+		elseif speed == c_run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_run_up_left or c_run_up_right)
 		end
 	elseif direction == 2 then
 		sprite.set_hflip(url, false)
-		if speed == walk_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_left_left or h_str.animation_walk_left_right)
-		elseif speed == run_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_left_left or h_str.animation_run_left_right)
+		if speed == c_walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_walk_left_left or c_walk_left_right)
+		elseif speed == c_run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_run_left_left or c_run_left_right)
 		end
 	elseif direction == 3 then
 		sprite.set_hflip(url, false)
-		if speed == walk_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_down_left or h_str.animation_walk_down_right)
-		elseif speed == run_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_down_left or h_str.animation_run_down_right)
+		if speed == c_walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_walk_down_left or c_walk_down_right)
+		elseif speed == c_run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_run_down_left or c_run_down_right)
 		end
 	elseif direction == 4 then
 		sprite.set_hflip(url, true)
-		if speed == walk_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_walk_left_left or h_str.animation_walk_left_right)
-		elseif speed == run_speed then
-			sprite.play_flipbook(url, self.left_hand_animation and h_str.animation_run_left_left or h_str.animation_run_left_right)
+		if speed == c_walk_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_walk_left_left or c_walk_left_right)
+		elseif speed == c_run_speed then
+			sprite.play_flipbook(url, self.left_hand_animation and c_run_left_left or c_run_left_right)
 		end
 	end
 	self.left_hand_animation = not self.left_hand_animation
 end
 
 local function tile_move_start(self, start_x, start_y, target_x, target_y)
-	local start_data = dgrid.get_tile_data(start_x, start_y)
+	local start_data = m_dgrid.get_tile_data(start_x, start_y)
 	if start_data.grass_tall then
-		timer.delay(0.5 / dgrid.get_entity_speed(go.get_id()), false, function()
-			dtile.set_tile(h_str.layer_object, start_x, start_y, dtile.get_tile(start_x, start_y, h_str.layer_object) - 8)
+		timer.delay(0.5 / m_dgrid.get_entity_speed(go.get_id()), false, function()
+			m_dtile.set_tile(c_object, start_x, start_y, m_dtile.get_tile(start_x, start_y, c_object) - 8)
 		end)
 	end
-	local target_data = dgrid.get_tile_data(target_x, target_y)
+	local target_data = m_dgrid.get_tile_data(target_x, target_y)
 	if target_data.grass_tall then
-		timer.delay(0.5 / dgrid.get_entity_speed(go.get_id()), false, function()
-			dtile.set_tile(h_str.layer_object, target_x, target_y, dtile.get_tile(target_x, target_y, h_str.layer_object) + 8)
+		timer.delay(0.5 / m_dgrid.get_entity_speed(go.get_id()), false, function()
+			m_dtile.set_tile(c_object, target_x, target_y, m_dtile.get_tile(target_x, target_y, c_object) + 8)
 		end)
 	end
 end
@@ -78,24 +116,28 @@ local function tile_move_complete(self)
 	
 end
 
+--------------------------------------------------------------------------------
+-- ENGINE FUNCTIONS
+--------------------------------------------------------------------------------
+
 function init(self)
-	dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), self.direction, { event_id = self.event_id })
+	m_dgrid.add_entity(go.get_id(), msg.url(), vmath.vector3(8, 8, 0), self.direction, { event_id = self.event_id })
 	self.left_hand_animation = true
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == dgrid.messages.turn then
+	if message_id == m_dgrid.messages.turn then
 		animate_turn(message.direction)
-	elseif message_id == dgrid.messages.move_start then
+	elseif message_id == m_dgrid.messages.move_start then
 		tile_move_start(self, message.start_x, message.start_y, message.target_x, message.target_y)
 		animate_move_start(self, message.direction, message.speed)
-	elseif message_id == dgrid.messages.move_complete then
+	elseif message_id == m_dgrid.messages.move_complete then
 		tile_move_complete(self)
-	elseif message_id == dgrid.messages.collide_passable then
+	elseif message_id == m_dgrid.messages.collide_passable then
 		-- todo
-	elseif message_id == dgrid.messages.collide_impassable then
+	elseif message_id == m_dgrid.messages.collide_impassable then
 		-- todo
-	elseif message_id == dgrid.messages.collide_entity then
+	elseif message_id == m_dgrid.messages.collide_entity then
 		-- todo
 	end
 end

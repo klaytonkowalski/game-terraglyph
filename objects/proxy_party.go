@@ -14,7 +14,7 @@ components {
   }
   properties {
     id: "screen_id"
-    value: "collection_party"
+    value: "party"
     type: PROPERTY_TYPE_HASH
   }
   properties {

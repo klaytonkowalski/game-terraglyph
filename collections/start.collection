@@ -1,4 +1,4 @@
-name: "collection_start"
+name: "start"
 instances {
   id: "start"
   prototype: "/objects/start.go"

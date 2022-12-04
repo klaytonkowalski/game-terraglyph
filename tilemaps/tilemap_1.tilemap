@@ -1,6 +1,6 @@
 tile_set: "/tilesources/tilesource_1_0.tilesource"
 layers {
-  id: "layer_collision"
+  id: "collision"
   z: 0.0
   is_visible: 1
   cell {
@@ -5605,7 +5605,7 @@ layers {
   }
 }
 layers {
-  id: "layer_terrain"
+  id: "terrain"
   z: 0.1
   is_visible: 1
   cell {
@@ -11210,7 +11210,7 @@ layers {
   }
 }
 layers {
-  id: "layer_object"
+  id: "object"
   z: 0.2
   is_visible: 1
   cell {
@@ -13783,7 +13783,7 @@ layers {
   }
 }
 layers {
-  id: "layer_canopy"
+  id: "canopy"
   z: 0.6
   is_visible: 1
   cell {

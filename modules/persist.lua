@@ -1,8 +1,20 @@
-local defsave = require "defsave.defsave"
+--------------------------------------------------------------------------------
+-- DEPENDENCIES
+--------------------------------------------------------------------------------
 
-local persist = {}
+local m_defsave = require "defsave.defsave"
 
-local default_data =
+--------------------------------------------------------------------------------
+-- PROPERTIES
+--------------------------------------------------------------------------------
+
+local p_persist = {}
+
+--------------------------------------------------------------------------------
+-- CONSTANTS
+--------------------------------------------------------------------------------
+
+local c_default_data =
 {
 	settings =
 	{
@@ -75,46 +87,50 @@ local default_data =
 	}
 }
 
-function persist.init()
-	defsave.set_appname("Terraglyph")
-	defsave.default_data = default_data
-	defsave.load("settings")
-	defsave.load("profile")
-	defsave.save_all()
+--------------------------------------------------------------------------------
+-- MODULE FUNCTIONS
+--------------------------------------------------------------------------------
+
+function p_persist.init()
+	m_defsave.set_appname("Terraglyph")
+	m_defsave.default_data = c_default_data
+	m_defsave.load("settings")
+	m_defsave.load("profile")
+	m_defsave.save_all()
 end
 
-function persist.set_fullscreen(flag)
-	defsave.set("settings", "fullscreen", flag)
-	defsave.save("settings")
+function p_persist.set_fullscreen(flag)
+	m_defsave.set("settings", "fullscreen", flag)
+	m_defsave.save("settings")
 end
 
-function persist.get_fullscreen()
-	return defsave.get("settings", "fullscreen")
+function p_persist.get_fullscreen()
+	return m_defsave.get("settings", "fullscreen")
 end
 
-function persist.get_continue_data()
+function p_persist.get_continue_data()
 	return
 	{
-		map_id = defsave.get("profile", "map_id"),
-		tile_x = defsave.get("profile", "tile_x"),
-		tile_y = defsave.get("profile", "tile_y")
+		map_id = m_defsave.get("profile", "map_id"),
+		tile_x = m_defsave.get("profile", "tile_x"),
+		tile_y = m_defsave.get("profile", "tile_y")
 	}
 end
 
-function persist.get_inventory()
-	return defsave.get("profile", "inventory")
+function p_persist.get_inventory()
+	return m_defsave.get("profile", "inventory")
 end
 
-function persist.get_party()
-	return defsave.get("profile", "party")
+function p_persist.get_party()
+	return m_defsave.get("profile", "party")
 end
 
-function persist.set_player_equipment(party_index, item_category, item_key)
-	local party = defsave.get("profile", "party")
+function p_persist.set_player_equipment(party_index, item_category, item_key)
+	local party = m_defsave.get("profile", "party")
 	local player = party[party_index]
 	player[item_category .. "_key"] = item_key
-	defsave.set("profile", "party", party)
-	defsave.save("profile")
+	m_defsave.set("profile", "party", party)
+	m_defsave.save("profile")
 end
 
-return persist
+return p_persist

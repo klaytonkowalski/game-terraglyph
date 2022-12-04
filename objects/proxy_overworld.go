@@ -14,7 +14,7 @@ components {
   }
   properties {
     id: "screen_id"
-    value: "collection_overworld"
+    value: "overworld"
     type: PROPERTY_TYPE_HASH
   }
 }

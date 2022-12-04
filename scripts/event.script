@@ -1,18 +1,47 @@
-local h_str = require "modules.h_str"
-local monarch = require "monarch.monarch"
+--------------------------------------------------------------------------------
+-- DEPENDENCIES
+--------------------------------------------------------------------------------
 
-local _event_id
-local _coroutine
-local _instruction
+local m_monarch = require "monarch.monarch"
 
-local _hooks = {}
+--------------------------------------------------------------------------------
+-- CONSTANTS
+--------------------------------------------------------------------------------
+
+local c_command_lock = hash("command_lock")
+local c_command_unlock = hash("command_unlock")
+local c_command_pause = hash("command_pause")
+local c_command_wait = hash("command_wait")
+local c_command_load_dialog = hash("command_load_dialog")
+local c_command_start_dialog = hash("command_start_dialog")
+local c_command_close_dialog = hash("command_close_dialog")
+
+local c_overworld = hash("overworld")
+local c_dialog = hash("dialog")
+
+local c_trigger_event = hash("trigger_event")
+local c_unhook_command = hash("unhook_command")
+
+--------------------------------------------------------------------------------
+-- PROPERTIES
+--------------------------------------------------------------------------------
+
+local p_event_id
+local p_coroutine
+local p_instruction
+
+local p_hooks = {}
+
+--------------------------------------------------------------------------------
+-- LOCAL FUNCTIONS
+--------------------------------------------------------------------------------
 
 local function command_lock(arguments)
-	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "script"), h_str.message_command_lock, { id = hash("/" .. arguments.id) })
+	msg.post(msg.url(c_overworld, hash("/overworld"), "script"), c_command_lock, { id = hash("/" .. arguments.id) })
 end
 
 local function command_unlock(arguments)
-	msg.post(msg.url(h_str.collection_overworld, hash("/overworld"), "script"), h_str.message_command_unlock, { id = hash("/" .. arguments.id) })
+	msg.post(msg.url(c_overworld, hash("/overworld"), "script"), c_command_unlock, { id = hash("/" .. arguments.id) })
 end
 
 local function command_pause(arguments)
@@ -26,31 +55,31 @@ local function command_pause(arguments)
 end
 
 local function command_wait(arguments)
-	while _hooks[arguments.hook] do
+	while p_hooks[arguments.hook] do
 		coroutine.yield()
 	end
 end
 
 local function command_load_dialog(arguments)
 	local collection_ready = false
-	monarch.show(h_str.collection_dialog, nil, nil, function()
+	m_monarch.show(c_dialog, nil, nil, function()
 		collection_ready = true
 	end)
 	while not collection_ready do
 		coroutine.yield()
 	end
-	msg.post(msg.url(h_str.collection_dialog, hash("/dialog"), "gui"), h_str.message_command_load_dialog, { text = arguments.text })
+	msg.post(msg.url(c_dialog, hash("/dialog"), "gui"), c_command_load_dialog, { text = arguments.text })
 end
 
 local function command_start_dialog(arguments)
-	msg.post(msg.url(h_str.collection_dialog, hash("/dialog"), "gui"), h_str.message_command_start_dialog, { hook = arguments.hook })
+	msg.post(msg.url(c_dialog, hash("/dialog"), "gui"), c_command_start_dialog, { hook = arguments.hook })
 end
 
 local function command_close_dialog(arguments)
-	msg.post(msg.url(h_str.collection_dialog, hash("/dialog"), "gui"), h_str.message_command_close_dialog)
+	msg.post(msg.url(c_dialog, hash("/dialog"), "gui"), c_command_close_dialog)
 end
 
-local _commands =
+local p_commands =
 {
 	lock = command_lock,
 	unlock = command_unlock,
@@ -62,44 +91,48 @@ local _commands =
 }
 
 local function process()
-	local path = "/assets/events/event_" .. _event_id .. ".json"
+	local path = "/assets/events/event_" .. p_event_id .. ".json"
 	local json_string = sys.load_resource(path)
 	if json_string then
 		local lua_table = json.decode(json_string)
 		if lua_table then
-			_instruction = 1
-			while _instruction <= #lua_table do
-				local cmd = lua_table[_instruction].cmd
-				local args = lua_table[_instruction].args
+			p_instruction = 1
+			while p_instruction <= #lua_table do
+				local cmd = lua_table[p_instruction].cmd
+				local args = lua_table[p_instruction].args
 				if args and args.hook then
-					_hooks[args.hook] = true
+					p_hooks[args.hook] = true
 				end
-				_commands[cmd](args)
-				_instruction = _instruction + 1
+				p_commands[cmd](args)
+				p_instruction = p_instruction + 1
 			end
 		end
 	end
 end
 
+--------------------------------------------------------------------------------
+-- ENGINE UPDATES
+--------------------------------------------------------------------------------
+
 function update(self, dt)
-	if _coroutine then
-		coroutine.resume(_coroutine)
-		if coroutine.status(_coroutine) == "dead" then
-			_event_id = nil
-			_coroutine = nil
-			_instruction = nil
-			_hooks = {}
+	if p_coroutine then
+		coroutine.resume(p_coroutine)
+		if coroutine.status(p_coroutine) == "dead" then
+			p_event_id = nil
+			p_coroutine = nil
+			p_instruction = nil
+			p_hooks = {}
 		end
 	end
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == h_str.message_trigger_event then
-		if not _coroutine then
-			_event_id = message.id
-			_coroutine = coroutine.create(process)
+	if message_id == c_trigger_event then
+		if not p_coroutine then
+			p_event_id = message.id
+			p_coroutine = coroutine.create(process)
 		end
-	elseif message_id == h_str.message_unhook_command then
-		_hooks[message.hook] = nil
+	elseif message_id == c_unhook_command then
+		p_hooks[message.hook] = nil
 	end
 end
