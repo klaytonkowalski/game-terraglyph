@@ -37,15 +37,19 @@ local function init_dcolors()
 	m_dcolors.add_color("main", "brown_2", vmath.vector4(192 / 255, 159 / 255, 103 / 255, 1))
 	m_dcolors.add_color("main", "brown_3", vmath.vector4(143 / 255, 112 / 255, 59 / 255, 1))
 	m_dcolors.add_color("main", "brown_4", vmath.vector4(78 / 255, 66 / 255, 45 / 255, 1))
-	m_dcolors.add_color("main", "green", vmath.vector4(67 / 255, 120 / 255, 56 / 255, 1))
 	m_dcolors.add_color("main", "red", vmath.vector4(120 / 255, 56 / 255, 56 / 255, 1))
+	m_dcolors.add_color("main", "green", vmath.vector4(67 / 255, 120 / 255, 56 / 255, 1))
+	m_dcolors.add_color("main", "blue", vmath.vector4(67 / 255, 120 / 255, 120 / 255, 1))
 	m_dcolors.add_color("main", "yellow", vmath.vector4(131 / 255, 120 / 255, 56 / 255, 1))
+	m_dcolors.add_color("main", "purple", vmath.vector4(87 / 255, 67 / 255, 120 / 255, 1))
 end
 
 local function init_dtypewriter()
 	m_dtypewriter.set_default_type_speed(45)
 	m_dtypewriter.set_default_color(m_dcolors.palette.brown_4)
 	m_dtypewriter.add_color("item", m_dcolors.palette.yellow)
+	m_dtypewriter.add_color("stat", m_dcolors.palette.blue)
+	m_dtypewriter.add_color("character", m_dcolors.palette.purple)
 end
 
 --------------------------------------------------------------------------------

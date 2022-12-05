@@ -46,9 +46,7 @@ local c_default_data =
 		{
 			[1] =
 			{
-				key = 1,
-				name = "Klayton",
-				damage = 6,
+				key = "klayton",
 				health_level = 10,
 				strength_level = 1,
 				defense_level = 2,
@@ -61,6 +59,12 @@ local c_default_data =
 				agility_buffer = 0,
 				wonder_buffer = 0,
 				terra_buffer = 0,
+				health_damage = 5,
+				strength_damage = 0,
+				defense_damage = 0,
+				agility_damage = 0,
+				wonder_damage = 0,
+				terra_damage = 0,
 				hands_key = false,
 				head_key = false,
 				torso_key = false,
@@ -72,8 +76,7 @@ local c_default_data =
 			},
 			[2] =
 			{
-				key = 1,
-				name = "Bosco",
+				key = "keya",
 				damage = 2,
 				health_level = 5,
 				strength_level = 2,
@@ -87,6 +90,12 @@ local c_default_data =
 				agility_buffer = 0,
 				wonder_buffer = 0,
 				terra_buffer = 0,
+				health_damage = 0,
+				strength_damage = 0,
+				defense_damage = 0,
+				agility_damage = 0,
+				wonder_damage = 0,
+				terra_damage = 0,
 				hands_key = false,
 				head_key = false,
 				torso_key = false,

@@ -40,6 +40,7 @@ local p_command_hook
 function init(self)
 	msg.post(msg.url(), c_acquire_input_focus)
 	m_dtypewriter.init(c_dialog_background, c_monogram, 5, 1, 226, 3, 2, msg.url())
+	m_dtypewriter.set_default_type_speed(45)
 end
 
 function on_input(self, action_id, action)

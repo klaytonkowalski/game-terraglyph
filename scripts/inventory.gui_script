@@ -2,6 +2,7 @@
 -- DEPENDENCIES
 --------------------------------------------------------------------------------
 
+local m_character = require "modules.character"
 local m_item = require "modules.item"
 local m_persist = require "modules.persist"
 local m_utility = require "modules.utility"
@@ -74,9 +75,10 @@ local function load_inventory()
 	p_inventory = m_persist.get_inventory()
 	for i = 1, #p_inventory do
 		if p_inventory[i] then
-			local item_node = gui.get_node(hash("item_" .. i))
-			gui.set_enabled(item_node, true)
-			gui.play_flipbook(item_node, p_inventory[i].key .. "_idle")
+			local node = gui.get_node(hash("item_" .. i))
+			gui.set_enabled(node, true)
+			local animation = p_inventory[i].key .. "_idle"
+			gui.play_flipbook(node, animation)
 		end
 	end
 end
@@ -86,14 +88,85 @@ local function load_party()
 	for i = 1, #p_party do
 		if p_party[i] then
 			p_party_ids[#p_party_ids + 1] = hash("party_" .. i)
-			local party_node = gui.get_node(p_party_ids[#p_party_ids])
-			gui.set_text(party_node, p_party[i].name)
+			local node = gui.get_node(p_party_ids[#p_party_ids])
+			local name = m_character[p_party[i].key].name
+			gui.set_text(node, name)
 		end
 	end
 end
 
-local function get_item_dialog(item)
+local function get_description_dialog(item)
 	return "<color=item>" .. item.name .. "<color=default><line>" .. item.description
+end
+
+local function get_consume_dialog(player_name, item)
+	local result = "Consume <color=item>" .. item.name .. "<color=default> as <color=character>" .. player_name .. "<color=default>?<paragraph>"
+	if item.health_restore > 0 then
+		result = result .. "<color=stat>Health (Restore)<color=default> = " .. item.health_restore .. "<line>"
+	end
+	if item.health_buffer > 0 then
+		result = result .. "<color=stat>Health (Buffer)<color=default> = " .. item.health_buffer .. "<line>"
+	end
+	if item.strength_restore > 0 then
+		result = result .. "<color=stat>Strength (Restore)<color=default> = " .. item.strength_restore .. "<line>"
+	end
+	if item.strength_buffer > 0 then
+		result = result .. "<color=stat>Strength (Buffer)<color=default> = " .. item.strength_buffer .. "<line>"
+	end
+	if item.defense_restore > 0 then
+		result = result .. "<color=stat>Defense (Restore)<color=default> = " .. item.defense_restore .. "<line>"
+	end
+	if item.defense_buffer > 0 then
+		result = result .. "<color=stat>Defense (Buffer)<color=default> = " .. item.defense_buffer .. "<line>"
+	end
+	if item.agility_restore > 0 then
+		result = result .. "<color=stat>Agility (Restore)<color=default> = " .. item.agility_restore .. "<line>"
+	end
+	if item.agility_buffer > 0 then
+		result = result .. "<color=stat>Agility (Buffer)<color=default> = " .. item.agility_buffer .. "<line>"
+	end
+	if item.wonder_restore > 0 then
+		result = result .. "<color=stat>Wonder (Restore)<color=default> = " .. item.wonder_restore .. "<line>"
+	end
+	if item.wonder_buffer > 0 then
+		result = result .. "<color=stat>Wonder (Buffer)<color=default> = " .. item.wonder_buffer .. "<line>"
+	end
+	if item.terra_restore > 0 then
+		result = result .. "<color=stat>Terra (Restore)<color=default> = " .. item.terra_restore .. "<line>"
+	end
+	if item.terra_buffer > 0 then
+		result = result .. "<color=stat>Terra (Buffer)<color=default> = " .. item.terra_buffer .. "<line>"
+	end
+	result = string.sub(result, 1, #result - 6)
+	return result
+end
+
+local function get_equip_dialog(player_name, item, equipped_item_name)
+	local result = "Equip <color=item>" .. item.name .. "<color=default> "
+	if equipped_item_name then
+		result = result .. "and unequip <color=item>" .. equipped_item_name .. "<color=default>"
+	end
+	result = result .. " as <color=character>" .. player_name .. "<color=default>?<paragraph>"
+	if item.health_equipment > 0 then
+		result = result .. "<color=stat>Health (Equipment)<color=default> = " .. item.health_equipment .. "<line>"
+	end
+	if item.strength_equipment > 0 then
+		result = result .. "<color=stat>Strength (Equipment)<color=default> = " .. item.strength_equipment .. "<line>"
+	end
+	if item.defense_equipment > 0 then
+		result = result .. "<color=stat>Defense (Equipment)<color=default> = " .. item.defense_equipment .. "<line>"
+	end
+	if item.agility_equipment > 0 then
+		result = result .. "<color=stat>Agility (Equipment)<color=default> = " .. item.agility_equipment .. "<line>"
+	end
+	if item.wonder_equipment > 0 then
+		result = result .. "<color=stat>Wonder (Equipment)<color=default> = " .. item.wonder_equipment .. "<line>"
+	end
+	if item.terra_equipment > 0 then
+		result = result .. "<color=stat>Terra (Equipment)<color=default> = " .. item.terra_equipment .. "<line>"
+	end
+	result = string.sub(result, 1, #result - 6)
+	return result
 end
 
 local function calculate_equipment_stats(player)
@@ -129,100 +202,92 @@ local function cancel_timer_handles()
 	p_timer_handles = {}
 end
 
-local function refresh_stats_background_consume()
+local function refresh_stat_static(stat, suffix, value)
+	local node = gui.get_node(hash(stat .. suffix))
+	gui.set_text(node, value)
+	gui.set_color(node, m_dcolors.palette.brown_4)
+end
+
+local function refresh_stat_dynamic(stat, suffix, value_old, value_new)
+	local node = gui.get_node(hash(stat .. suffix))
+	gui.set_text(node, value_new)
+	gui.set_color(node, value_old == value_new and m_dcolors.palette.brown_4 or (value_old < value_new and m_dcolors.palette.green or m_dcolors.palette.red))
+	if value_old ~= value_new then
+		p_timer_handles[#p_timer_handles + 1] = timer.delay(0.75, true, function()
+			local number = tonumber(gui.get_text(node))
+			if number == value_old then
+				gui.set_text(node, value_new)
+				gui.set_color(node, value_old < value_new and m_dcolors.palette.green or m_dcolors.palette.red)
+			else
+				gui.set_text(node, value_old)
+				gui.set_color(node, m_dcolors.palette.brown_4)
+			end
+		end)
+	end
+end
+
+local function refresh_stats_consume()
 	cancel_timer_handles()
 	local item = m_item[p_inventory[p_inventory_index].key]
 	local player = p_party[p_party_index]
 	local equipment_stats = calculate_equipment_stats(player)
 	for _, stat in ipairs(c_stats_list) do
-		local delta_node = gui.get_node(hash(stat .. "_delta"))
-		local delta_value = math.min(item[stat .. "_restore"], player.damage) + item[stat .. "_buffer"]
-		gui.set_text(delta_node, delta_value > 0 and "+" .. delta_value or delta_value)
-		gui.set_color(delta_node, delta_value == 0 and m_dcolors.palette.brown_4 or (delta_value > 0 and m_dcolors.palette.green or m_dcolors.palette.red))
-		local level_node = gui.get_node(hash(stat .. "_level"))
 		local level_value = player[stat .. "_level"]
-		gui.set_text(level_node, level_value)
-		gui.set_color(level_node, m_dcolors.palette.brown_4)
-		local equipment_node = gui.get_node(hash(stat .. "_equipment"))
+		refresh_stat_static(stat, "_level", level_value)
 		local equipment_value = equipment_stats.totals[stat]
-		gui.set_text(equipment_node, equipment_value)
-		gui.set_color(equipment_node, m_dcolors.palette.brown_4)
-		local buffer_node = gui.get_node(hash(stat .. "_buffer"))
-		local buffer_value = player[stat .. "_buffer"] + item[stat .. "_buffer"]
-		gui.set_text(buffer_node, buffer_value)
-		gui.set_color(buffer_node, item[stat .. "_buffer"] == 0 and m_dcolors.palette.brown_4 or (item[stat .. "_buffer"] > 0 and m_dcolors.palette.green or m_dcolors.palette.red))
-		local total_node = gui.get_node(hash(stat .. "_total"))
-		local total_value = player[stat .. "_buffer"] + equipment_stats.totals[stat] + player[stat .. "_level"] + delta_value
-		gui.set_text(total_node, total_value)
-		gui.set_color(total_node, delta_value == 0 and m_dcolors.palette.brown_4 or (delta_value > 0 and m_dcolors.palette.green or m_dcolors.palette.red))
+		refresh_stat_static(stat, "_equipment", equipment_value)
+		local buffer_value_old = player[stat .. "_buffer"]
+		local buffer_value_new = player[stat .. "_buffer"] + item[stat .. "_buffer"]
+		refresh_stat_dynamic(stat, "_buffer", buffer_value_old, buffer_value_new)
+		local total_value_old = buffer_value_old + equipment_value + level_value
+		local total_value_new = buffer_value_new + equipment_value + level_value
+		refresh_stat_dynamic(stat, "_total", total_value_old, total_value_new)
+		local current_value_old = total_value_old - player[stat .. "_damage"]
+		local current_value_new = total_value_new - player[stat .. "_damage"] + math.min(item[stat .. "_restore"], player[stat .. "_damage"])
+		refresh_stat_dynamic(stat, "_current", current_value_old, current_value_new)
 	end
 	for _, category in ipairs(c_equipment_list) do
 		local node = gui.get_node(hash(category))
 		gui.set_enabled(node, player[category .. "_key"])
 	end
-	m_dtypewriter.load("Consume <color=item>" .. item.name .. "<color=default>?")
+	local player_name = m_character[player.key].name
+	local dialog = get_consume_dialog(player_name, item)
+	m_dtypewriter.load(dialog)
 	m_dtypewriter.start()
 	local node_selector = gui.get_node(c_selector_stats)
 	gui.set_enabled(node_selector, false)
 end
 
-local function refresh_stats_background_equip()
+local function refresh_stats_equip()
 	cancel_timer_handles()
 	local item = m_item[p_inventory[p_inventory_index].key]
 	local player = p_party[p_party_index]
 	local equipment_stats = calculate_equipment_stats(player)
 	for _, stat in ipairs(c_stats_list) do
-		local level_node = gui.get_node(hash(stat .. "_level"))
 		local level_value = player[stat .. "_level"]
-		gui.set_text(level_node, level_value)
-		gui.set_color(level_node, m_dcolors.palette.brown_4)
-		local equipment_node = gui.get_node(hash(stat .. "_equipment"))
+		refresh_stat_static(stat, "_level", level_value)
 		local equipment_value_old = equipment_stats.totals[stat]
 		local equipment_value_new = equipment_value_old - equipment_stats[item.equip_key][stat] + item[stat .. "_equipment"]
-		gui.set_text(equipment_node, equipment_value_new)
-		gui.set_color(equipment_node, equipment_value_old == equipment_value_new and m_dcolors.palette.brown_4 or (equipment_value_old < equipment_value_new and m_dcolors.palette.green or m_dcolors.palette.red))
-		if equipment_value_old ~= equipment_value_new then
-			p_timer_handles[#p_timer_handles + 1] = timer.delay(0.75, true, function()
-				local number = tonumber(gui.get_text(equipment_node))
-				if number == equipment_value_old then
-					gui.set_text(equipment_node, equipment_value_new)
-					gui.set_color(equipment_node, equipment_value_old < equipment_value_new and m_dcolors.palette.green or m_dcolors.palette.red)
-				else
-					gui.set_text(equipment_node, equipment_value_old)
-					gui.set_color(equipment_node, m_dcolors.palette.brown_4)
-				end
-			end)
-		end
-		local buffer_node = gui.get_node(hash(stat .. "_buffer"))
+		refresh_stat_dynamic(stat, "_equipment", equipment_value_old, equipment_value_new)
 		local buffer_value = player[stat .. "_buffer"]
-		gui.set_text(buffer_node, buffer_value)
-		gui.set_color(buffer_node, m_dcolors.palette.brown_4)
-		local total_node = gui.get_node(hash(stat .. "_total"))
+		refresh_stat_static(stat, "_buffer", buffer_value)
 		local total_value_old = buffer_value + equipment_value_old + level_value
 		local total_value_new = buffer_value + equipment_value_new + level_value
-		gui.set_text(total_node, total_value_new)
-		gui.set_color(total_node, total_value_old == total_value_new and m_dcolors.palette.brown_4 or (total_value_old < total_value_new and m_dcolors.palette.green or m_dcolors.palette.red))
-		if total_value_old ~= total_value_new then
-			p_timer_handles[#p_timer_handles + 1] = timer.delay(0.75, true, function()
-				local number = tonumber(gui.get_text(total_node))
-				if number == total_value_old then
-					gui.set_text(total_node, total_value_new)
-					gui.set_color(total_node, total_value_old < total_value_new and m_dcolors.palette.green or m_dcolors.palette.red)
-				else
-					gui.set_text(total_node, total_value_old)
-					gui.set_color(total_node, m_dcolors.palette.brown_4)
-				end
-			end)
-		end
+		refresh_stat_dynamic(stat, "_total", total_value_old, total_value_new)
+		local current_value_old = total_value_old - player[stat .. "_damage"]
+		local current_value_new = total_value_new - player[stat .. "_damage"]
+		refresh_stat_dynamic(stat, "_current", current_value_old, current_value_new)
 	end
+	local player_name = m_character[player.key].name
 	for _, category in ipairs(c_equipment_list) do
 		local node = gui.get_node(hash(category))
 		if player[category .. "_key"] then
 			gui.set_enabled(node, true)
 			if item.equip_key == category then
 				gui.play_flipbook(node, player[category .. "_key"] .. "_active")
-				local player_item_name = m_item[player[category .. "_key"]].name
-				m_dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default> and unequip <color=item>" .. player_item_name .. "<color=default>?")
+				local equipped_item_name = m_item[player[category .. "_key"]].name
+				local dialog = get_equip_dialog(player_name, item, equipped_item_name)
+				m_dtypewriter.load(dialog)
 			else
 				gui.play_flipbook(node, player[category .. "_key"] .. "_idle")
 			end
@@ -231,7 +296,8 @@ local function refresh_stats_background_equip()
 		end
 	end
 	if not m_dtypewriter.is_loaded() then
-		m_dtypewriter.load("Equip <color=item>" .. item.name .. "<color=default>?")
+		local dialog = get_equip_dialog(player_name, item)
+		m_dtypewriter.load(dialog)
 	end
 	m_dtypewriter.start()
 	local node_selector = gui.get_node(c_selector_stats)
@@ -253,8 +319,8 @@ local function select_inventory_index(index)
 		local next_item_key = p_inventory[p_inventory_index].key
 		local next_item = m_item[next_item_key]
 		gui.play_flipbook(next_node, next_item_key .. "_active")
-		local next_item_dialog = get_item_dialog(next_item)
-		m_dtypewriter.load(next_item_dialog)
+		local dialog = get_description_dialog(next_item)
+		m_dtypewriter.load(dialog)
 		m_dtypewriter.start()
 	end
 	local selector_node = gui.get_node(c_selector_inventory)
@@ -276,9 +342,9 @@ local function select_party_index(index)
 	local next_node = gui.get_node(p_party_ids[p_party_index])
 	gui.set_color(next_node, m_dcolors.palette.brown_1)
 	if p_action_ids[p_action_index] == c_consume then
-		refresh_stats_background_consume()
+		refresh_stats_consume()
 	elseif p_action_ids[p_action_index] == c_equip then
-		refresh_stats_background_equip()
+		refresh_stats_equip()
 	end
 end
 
@@ -321,8 +387,6 @@ local function toggle_party_background(flag)
 	gui.set_enabled(node_party_background, flag)
 	local node_stats_background = gui.get_node(c_stats_background)
 	gui.set_enabled(node_stats_background, flag)
-	local node_spinner = gui.get_node(c_spinner)
-	gui.set_enabled(node_spinner, false)
 	if flag then
 		local node_player = gui.get_node(hash("party_" .. p_party_index))
 		gui.set_color(node_player, m_dcolors.palette.brown_4)
@@ -330,8 +394,8 @@ local function toggle_party_background(flag)
 	else
 		cancel_timer_handles()
 		local item = m_item[p_inventory[p_inventory_index].key]
-		local item_dialog = get_item_dialog(item)
-		m_dtypewriter.load(item_dialog)
+		local dialog = get_description_dialog(item)
+		m_dtypewriter.load(dialog)
 		m_dtypewriter.start()
 	end
 end
@@ -342,17 +406,6 @@ local function exit_menus()
 	m_monarch.back()
 end
 
-local function on_input_dtypewriter()
-	if m_dtypewriter.is_waiting() then
-		m_dtypewriter.continue()
-	elseif m_dtypewriter.is_complete() then
-		local item = m_item[p_inventory[p_inventory_index].key]
-		local item_dialog = get_item_dialog(item)
-		m_dtypewriter.load(item_dialog)
-		m_dtypewriter.start()
-	end
-end
-
 --------------------------------------------------------------------------------
 -- ENGINE FUNCTIONS
 --------------------------------------------------------------------------------
@@ -360,6 +413,7 @@ end
 function init(self)
 	msg.post(msg.url(), c_acquire_input_focus)
 	m_dtypewriter.init(c_dialog_background, c_monogram, 5, 1, 226, 3, 2, msg.url())
+	m_dtypewriter.set_default_type_speed(0)
 	load_inventory()
 	load_party()
 	select_inventory_index(1)
@@ -367,6 +421,14 @@ end
 
 function on_input(self, action_id, action)
 	if action.pressed then
+		if action_id == c_key_lctrl then
+			if m_dtypewriter.is_waiting() then
+				m_dtypewriter.continue()
+			elseif m_dtypewriter.is_complete() then
+				m_dtypewriter.restart()
+				m_dtypewriter.start()
+			end
+		end
 		if p_state == c_state_inventory then
 			if action_id == c_key_up then
 				select_inventory_index(p_inventory_index - 3)
@@ -384,8 +446,6 @@ function on_input(self, action_id, action)
 					p_state = c_state_action
 					toggle_action_background(true)
 				end
-			elseif action_id == c_key_lctrl then
-				on_input_dtypewriter()
 			elseif action_id == c_key_enter then
 				exit_menus()
 			end
@@ -409,8 +469,6 @@ function on_input(self, action_id, action)
 				elseif p_action_ids[p_action_index] == c_drop then
 					-- todo
 				end
-			elseif action_id == c_key_lctrl then
-				on_input_dtypewriter()
 			elseif action_id == c_key_enter then
 				exit_menus()
 			end
@@ -433,17 +491,9 @@ function on_input(self, action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
-	if p_state == c_state_inventory or p_state == c_state_action then
-		if message_id == m_dtypewriter.messages.start then
-			gui.set_enabled(gui.get_node(c_spinner), false)
-		elseif message_id == m_dtypewriter.messages.wait then
-			gui.set_enabled(gui.get_node(c_spinner), true)
-		elseif message_id == m_dtypewriter.messages.continue then
-			gui.set_enabled(gui.get_node(c_spinner), false)
-		elseif message_id == m_dtypewriter.messages.complete then
-			gui.set_enabled(gui.get_node(c_spinner), true)
-		elseif message_id == m_dtypewriter.messages.clear then
-			gui.set_enabled(gui.get_node(c_spinner), false)
-		end
+	if message_id == m_dtypewriter.messages.start or message_id == m_dtypewriter.messages.restart or message_id == m_dtypewriter.messages.continue or message_id == m_dtypewriter.messages.clear then
+		gui.set_enabled(gui.get_node(c_spinner), false)
+	elseif message_id == m_dtypewriter.messages.wait or message_id == m_dtypewriter.messages.complete then
+		gui.set_enabled(gui.get_node(c_spinner), true)
 	end
 end
