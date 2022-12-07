@@ -19,8 +19,10 @@ local c_default_data =
 {
 	settings =
 	{
-		music = 0,
-		sound = 0,
+		text_speed = 45,
+		text_fade = 0,
+		music_volume = 0,
+		sound_volume = 0,
 		fullscreen = false
 	},
 	profile =
@@ -31,22 +33,69 @@ local c_default_data =
 		direction = 3,
 		inventory =
 		{
-			[1] = { key = "stick" },
-			[2] = { key = "apple", count = 2 },
-			[3] = { key = "stick" },
-			[4] = false,
-			[5] = false,
-			[6] = false,
-			[7] = false,
-			[8] = false,
-			[9] = false,
-			[10] = false,
-			[11] = false,
-			[12] = false
+			{ key = "stick", count = 1 },
+			{ key = "apple", count = 2 },
+			{ key = "stick", count = 1 },
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false
 		},
 		party =
 		{
-			[1] =
 			{
 				key = "klayton",
 				health_level = 10,
@@ -88,8 +137,8 @@ local c_default_data =
 				bracelet_key = false,
 				necklace_key = false
 			},
-			[2] = false,
-			[3] = false
+			false,
+			false
 		}
 	}
 }
@@ -106,6 +155,24 @@ function p_persist.init()
 	m_defsave.save_all()
 end
 
+function p_persist.get_text_speed()
+	return m_defsave.get("settings", "text_speed")
+end
+
+function p_persist.set_text_speed(speed)
+	m_defsave.set("settings", "text_speed", speed)
+	m_defsave.save("settings")
+end
+
+function p_persist.get_text_fade()
+	return m_defsave.get("settings", "text_fade")
+end
+
+function p_persist.set_text_fade(fade)
+	m_defsave.set("settings", "text_fade", fade)
+	m_defsave.save("settings")
+end
+
 function p_persist.get_fullscreen()
 	return m_defsave.get("settings", "fullscreen")
 end
@@ -115,22 +182,22 @@ function p_persist.set_fullscreen(flag)
 	m_defsave.save("settings")
 end
 
-function p_persist.get_music()
+function p_persist.get_music_volume()
 	return m_defsave.get("settings", "music")
 end
 
-function p_persist.set_music(volume)
-	volumn = m_utility.clamp(volume, 0, 100)
+function p_persist.set_music_volume(volume)
+	volume = m_utility.clamp(volume, 0, 100)
 	m_defsave.set("settings", "music", volume)
 	m_defsave.save("settings")
 end
 
-function p_persist.get_sound()
+function p_persist.get_sound_volume()
 	return m_defsave.get("settings", "sound")
 end
 
-function p_persist.set_sound(volume)
-	volumn = m_utility.clamp(volume, 0, 100)
+function p_persist.set_sound_volume(volume)
+	volume = m_utility.clamp(volume, 0, 100)
 	m_defsave.set("settings", "sound", volume)
 	m_defsave.save("settings")
 end
@@ -158,24 +225,38 @@ function p_persist.get_inventory()
 	return m_defsave.get("profile", "inventory")
 end
 
+function p_persist.get_inventory_section_count()
+	local inventory = m_defsave.get("profile", "inventory")
+	return math.floor(#inventory / 12)
+end
+
 function p_persist.set_inventory_item(inventory_index, item_key, item_count)
 	local inventory = m_defsave.get("profile", "inventory")
-	local item = inventory[inventory_index]
-	item.key = item_key
-	item.count = item_count
+	if inventory[inventory_index] then
+		local item = inventory[inventory_index]
+		item.key = item_key
+		item.count = item_count
+	else
+		local item = { key = item_key, count = item_count }
+		inventory[inventory_index] = item
+	end
 	m_defsave.set("profile", "inventory", inventory)
 end
 
 function p_persist.set_inventory_item_count(inventory_index, item_count)
 	local inventory = m_defsave.get("profile", "inventory")
-	local item = inventory[inventory_index]
-	item.count = item_count
+	if item_count > 0 then
+		local item = inventory[inventory_index]
+		item.count = item_count
+	else
+		inventory[inventory_index] = false
+	end
 	m_defsave.set("profile", "inventory", inventory)
 end
 
-function p_persist.set_inventory_item_nil(inventory_index)
+function p_persist.swap_inventory_items(index_1, index_2)
 	local inventory = m_defsave.get("profile", "inventory")
-	inventory[inventory_index] = false
+	m_utility.swap(inventory, index_1, index_2)
 	m_defsave.set("profile", "inventory", inventory)
 end
 

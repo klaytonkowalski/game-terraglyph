@@ -55,6 +55,8 @@ local c_equipment_list = { "hands", "head", "torso", "trunk", "feet", "ring", "b
 
 local p_state = c_state_inventory
 
+local p_inventory_section = 1
+local p_inventory_section_count = 1
 local p_inventory_index = 1
 local p_inventory = {}
 
@@ -68,6 +70,8 @@ local p_party = {}
 local p_timer_handles = {}
 
 local p_persist_stat = {}
+
+local p_swapping_item = false
 
 --------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -154,16 +158,26 @@ local function cancel_timer_handles()
 	p_timer_handles = {}
 end
 
-local function exit_menus()
-	m_dtypewriter.clear()
-	m_monarch.back()
-	m_monarch.back()
+local function init_inventory_sections()
+	p_inventory_section_count = 5
+	for i = 2, p_inventory_section_count do
+		local node = gui.get_node(hash("section_" .. i))
+		gui.set_color(node, m_dcolors.palette.brown_4)
+	end
 end
 
-local function refresh_inventory_nodes()
+local function get_inventory_section_bounds()
+	local floor_index = (p_inventory_section - 1) * 12 + 1
+	local ceil_index = floor_index + 12 - 1
+	return floor_index, ceil_index
+end
+
+local function refresh_inventory()
+	p_inventory = m_persist.get_inventory()
+	local floor_index, ceil_index = get_inventory_section_bounds()
 	for i = 1, #p_inventory do
 		local node = gui.get_node(hash("item_" .. i))
-		if p_inventory[i] then
+		if floor_index <= i and i <= ceil_index and p_inventory[i] then
 			gui.set_enabled(node, true)
 			local animation = p_inventory[i].key .. "_idle"
 			gui.play_flipbook(node, animation)
@@ -173,7 +187,8 @@ local function refresh_inventory_nodes()
 	end
 end
 
-local function refresh_party_nodes()
+local function refresh_party()
+	p_party = m_persist.get_party()
 	for i = 1, #p_party do
 		if p_party[i] then
 			p_party_ids[#p_party_ids + 1] = hash("party_" .. i)
@@ -265,7 +280,20 @@ local function refresh_stats_equip()
 	m_dtypewriter.start()
 end
 
-local function select_inventory_index(index)
+local function set_inventory_index(index)
+	p_inventory_index = index
+	local next_inventory_section = math.ceil(p_inventory_index / 12)
+	if next_inventory_section ~= p_inventory_section then
+		local node_old = gui.get_node(hash("section_" .. p_inventory_section))
+		gui.set_color(node_old, m_dcolors.palette.brown_4)
+		local node_new = gui.get_node(hash("section_" .. next_inventory_section))
+		gui.set_color(node_new, m_dcolors.palette.brown_1)
+		p_inventory_section = next_inventory_section
+		refresh_inventory()
+	end
+end
+
+local function select_inventory_index_noswap(index)
 	if not m_dtypewriter.is_clear() then
 		m_dtypewriter.clear()
 	end
@@ -273,7 +301,7 @@ local function select_inventory_index(index)
 		local previous_node = gui.get_node(hash("item_" .. p_inventory_index))
 		gui.play_flipbook(previous_node, p_inventory[p_inventory_index].key .. "_idle")
 	end
-	p_inventory_index = m_utility.wrap(index, 1, #p_inventory)
+	set_inventory_index(index)
 	local next_node = gui.get_node(hash("item_" .. p_inventory_index))
 	if p_inventory[p_inventory_index] then
 		local next_item_key = p_inventory[p_inventory_index].key
@@ -285,6 +313,26 @@ local function select_inventory_index(index)
 	end
 	local selector_node = gui.get_node(c_selector)
 	gui.set_position(selector_node, gui.get_position(next_node))
+end
+
+local function select_inventory_index_swap(index)
+	m_persist.swap_inventory_items(p_inventory_index, index)
+	refresh_inventory()
+	set_inventory_index(index)
+	local next_node = gui.get_node(hash("item_" .. p_inventory_index))
+	local next_item_key = p_inventory[p_inventory_index].key
+	local next_item = m_item[next_item_key]
+	gui.play_flipbook(next_node, next_item_key .. "_active")
+	local selector_node = gui.get_node(c_selector)
+	gui.set_position(selector_node, gui.get_position(next_node))
+end
+
+local function select_inventory_index(index)
+	if p_swapping_item then
+		select_inventory_index_swap(index)
+	else
+		select_inventory_index_noswap(index)
+	end
 end
 
 local function select_action_index(index)
@@ -363,11 +411,7 @@ local function consume_item()
 		m_persist.set_party_stat(p_party_index, persist_stat.key, persist_stat.suffix, persist_stat.value)
 	end
 	local item_count = p_inventory[p_inventory_index].count - 1
-	if item_count > 0 then
-		m_persist.set_inventory_item_count(p_inventory_index, item_count)
-	else
-		m_persist.set_inventory_item_nil(p_inventory_index)
-	end
+	m_persist.set_inventory_item_count(p_inventory_index, item_count)
 end
 
 local function equip_item()
@@ -375,14 +419,14 @@ local function equip_item()
 		local persist_stat = p_persist_stat[i]
 		m_persist.set_party_stat(p_party_index, persist_stat.key, persist_stat.suffix, persist_stat.value)
 	end
-	local item_key_new = p_inventory[p_inventory_index].key
-	local equip_key = m_item[item_key_new].equip_key
-	m_persist.set_party_equipment(p_party_index, equip_key, item_key_new)
-	local item_key_old = p_party[p_party_index][equip_key .. "_key"]
-	if item_key_old then
-		m_persist.set_inventory_item(p_inventory_index, item_key_old)
-	else
-		m_persist.set_inventory_item_nil(p_inventory_index)
+	local new_item_key = p_inventory[p_inventory_index].key
+	local new_equip_key = m_item[new_item_key].equip_key
+	m_persist.set_party_equipment(p_party_index, new_equip_key, new_item_key)
+	local new_item_count = p_inventory[p_inventory_index].count - 1
+	m_persist.set_inventory_item_count(p_inventory_index, new_item_count)
+	local old_item_key = p_party[p_party_index][new_equip_key .. "_key"]
+	if old_item_key then
+		m_persist.set_inventory_item(p_inventory_index, old_item_key, 1)
 	end
 end
 
@@ -395,9 +439,8 @@ local function select_player()
 	p_state = c_state_inventory
 	toggle_party_background(false)
 	toggle_action_background(false)
-	p_inventory = m_persist.get_inventory()
 	p_party = m_persist.get_party()
-	refresh_inventory_nodes()
+	refresh_inventory()
 	select_inventory_index(p_inventory_index)
 end
 
@@ -408,11 +451,9 @@ end
 function init(self)
 	msg.post(msg.url(), c_acquire_input_focus)
 	m_dtypewriter.init(c_dialog_background, c_monogram, 5, 1, 226, 3, 2, msg.url())
-	m_dtypewriter.set_default_type_speed(0)
-	p_inventory = m_persist.get_inventory()
-	p_party = m_persist.get_party()
-	refresh_inventory_nodes()
-	refresh_party_nodes()
+	init_inventory_sections()
+	refresh_inventory()
+	refresh_party()
 	select_inventory_index(1)
 end
 
@@ -428,13 +469,21 @@ function on_input(self, action_id, action)
 		end
 		if p_state == c_state_inventory then
 			if action_id == c_key_w then
-				select_inventory_index(p_inventory_index - 3)
+				local floor_index, ceil_index = get_inventory_section_bounds()
+				local next_index = m_utility.wrap(p_inventory_index - 3, floor_index, ceil_index)
+				select_inventory_index(next_index)
 			elseif action_id == c_key_a then
-				select_inventory_index(p_inventory_index % 3 == 1 and p_inventory_index + 2 or p_inventory_index - 1)
+				local next_section_index = m_utility.wrap(p_inventory_index + 2 - 12, 1, #p_inventory)
+				local next_index = p_inventory_index % 3 == 1 and next_section_index or p_inventory_index - 1
+				select_inventory_index(next_index)
 			elseif action_id == c_key_s then
-				select_inventory_index(p_inventory_index + 3)
+				local floor_index, ceil_index = get_inventory_section_bounds()
+				local next_index = m_utility.wrap(p_inventory_index + 3, floor_index, ceil_index)
+				select_inventory_index(next_index)
 			elseif action_id == c_key_d then
-				select_inventory_index(p_inventory_index % 3 == 0 and p_inventory_index - 2 or p_inventory_index + 1)
+				local next_section_index = m_utility.wrap(p_inventory_index - 2 + 12, 1, #p_inventory)
+				local next_index = p_inventory_index % 3 == 0 and next_section_index or p_inventory_index + 1
+				select_inventory_index(next_index)
 			elseif action_id == c_key_q then
 				m_dtypewriter.clear()
 				m_monarch.back()
@@ -443,8 +492,14 @@ function on_input(self, action_id, action)
 					p_state = c_state_action
 					toggle_action_background(true)
 				end
+			elseif action_id == c_key_lshift then
+				if p_inventory[p_inventory_index] then
+					p_swapping_item = true
+				end
 			elseif action_id == c_key_enter then
-				exit_menus()
+				m_dtypewriter.clear()
+				m_monarch.back()
+				m_monarch.back()
 			end
 		elseif p_state == c_state_action then
 			if action_id == c_key_w then
@@ -467,7 +522,9 @@ function on_input(self, action_id, action)
 					-- todo
 				end
 			elseif action_id == c_key_enter then
-				exit_menus()
+				m_dtypewriter.clear()
+				m_monarch.back()
+				m_monarch.back()
 			end
 		elseif p_state == c_state_party then
 			if action_id == c_key_w then
@@ -481,7 +538,15 @@ function on_input(self, action_id, action)
 			elseif action_id == c_key_e then
 				select_player()
 			elseif action_id == c_key_enter then
-				exit_menus()
+				m_dtypewriter.clear()
+				m_monarch.back()
+				m_monarch.back()
+			end
+		end
+	elseif action.released then
+		if action_id == c_key_lshift then
+			if p_state == c_state_inventory then
+				p_swapping_item = false
 			end
 		end
 	end

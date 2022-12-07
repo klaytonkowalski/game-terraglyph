@@ -21,7 +21,7 @@ instances {
 }
 instances {
   id: "player"
-  prototype: "/objects/character_1.go"
+  prototype: "/objects/character_2.go"
   position {
     x: 200.0
     y: 152.0

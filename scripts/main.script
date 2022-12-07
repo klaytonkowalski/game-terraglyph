@@ -47,7 +47,8 @@ local function init_dcolors()
 end
 
 local function init_dtypewriter()
-	m_dtypewriter.set_default_type_speed(45)
+	m_dtypewriter.set_default_type_speed(m_persist.get_text_speed())
+	m_dtypewriter.set_fade_delay(m_persist.get_text_fade())
 	m_dtypewriter.set_default_color(m_dcolors.palette.brown_4)
 	m_dtypewriter.add_color("item", m_dcolors.palette.yellow)
 	m_dtypewriter.add_color("stat", m_dcolors.palette.blue)
