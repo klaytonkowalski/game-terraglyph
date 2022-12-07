@@ -14,7 +14,9 @@ local m_dtypewriter = require "dtypewriter.dtypewriter"
 
 local c_acquire_input_focus = hash("acquire_input_focus")
 local c_init_monarch = hash("init_monarch")
+
 local c_key_f11 = hash("key_f11")
+
 local c_overworld = hash("overworld")
 
 --------------------------------------------------------------------------------

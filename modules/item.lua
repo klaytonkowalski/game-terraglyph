@@ -22,7 +22,7 @@ return
 		consume = true,
 		drop = true,
 		sell_value = 2,
-		health_restore = 5,
+		health_restore = 0,
 		strength_restore = 0,
 		defense_restore = 0,
 		agility_restore = 0,

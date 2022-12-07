@@ -21,9 +21,9 @@ local c_monogram = hash("monogram")
 local c_dialog_background = hash("dialog_background")
 local c_spinner = hash("spinner")
 
-local c_key_z = hash("key_z")
-local c_key_x = hash("key_x")
-local c_key_lctrl = hash("key_lctrl")
+local c_key_q = hash("key_q")
+local c_key_e = hash("key_e")
+local c_key_space = hash("key_space")
 
 local c_main = hash("main")
 
@@ -45,7 +45,7 @@ end
 
 function on_input(self, action_id, action)
 	if action.pressed then
-		if action_id == c_key_z or action_id == c_key_x or action_id == c_key_lctrl then
+		if action_id == c_key_q or action_id == c_key_e or action_id == c_key_space then
 			if m_dtypewriter.is_waiting() then
 				m_dtypewriter.continue()
 			elseif m_dtypewriter.is_complete() then

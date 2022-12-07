@@ -95,10 +95,10 @@ end
 function init(self)
 	m_dgrid.set_tile_dimensions(16, 16)
 	m_dgrid.add_map_tag(c_water, false)
-	local continue_data = m_persist.get_continue_data()
-	p_map_id = continue_data.map_id
-	p_map_objects = collectionfactory.create(msg.url(nil, nil, "collectionfactory_map_" .. continue_data.map_id))
-	p_tilesource_id = m_map.map_to_tilesource[continue_data.map_id]
+	local location = m_persist.get_location()
+	p_map_id = location.map_id
+	p_map_objects = collectionfactory.create(msg.url(nil, nil, "collectionfactory_map_" .. location.map_id))
+	p_tilesource_id = m_map.map_to_tilesource[location.map_id]
 	local tilemap_url = msg.url(nil, p_map_objects[hash("/tilemap")], "tilemap")
 	local _, _, tilemap_width, tilemap_height = tilemap.get_bounds(tilemap_url)
 	m_dgrid.set_map_dimensions(tilemap_width, tilemap_height)

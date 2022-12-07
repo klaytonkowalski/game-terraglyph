@@ -22,10 +22,10 @@ local c_save = hash("save")
 
 local c_party = hash("party")
 
-local c_key_left = hash("key_left")
-local c_key_right = hash("key_right")
-local c_key_z = hash("key_z")
-local c_key_x = hash("key_x")
+local c_key_a = hash("key_a")
+local c_key_d = hash("key_d")
+local c_key_q = hash("key_q")
+local c_key_e = hash("key_e")
 local c_key_enter = hash("key_enter")
 
 local c_nodes =
@@ -78,17 +78,17 @@ end
 
 function on_input(self, action_id, action)
 	if action.pressed then
-		if action_id == c_key_z or action_id == c_key_enter then
+		if action_id == c_key_q or action_id == c_key_enter then
 			m_monarch.back()
-		elseif action_id == c_key_x then
+		elseif action_id == c_key_e then
 			if p_node_index == 1 then
 				m_monarch.show(c_inventory)
 			elseif p_node_index == 2 then
 				m_monarch.show(c_party)
 			end
-		elseif action_id == c_key_left then
+		elseif action_id == c_key_a then
 			set_node_index(p_node_index - 1)
-		elseif action_id == c_key_right then
+		elseif action_id == c_key_d then
 			set_node_index(p_node_index + 1)
 		end
 	end
