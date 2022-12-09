@@ -35,6 +35,10 @@ local c_equip = hash("equip")
 local c_drop = hash("drop")
 
 local c_spinner = hash("spinner")
+local c_item_background = hash("item_background")
+local c_item_preview_new = hash("item_preview_new")
+local c_item_preview_arrow = hash("item_preview_arrow")
+local c_item_preview_old = hash("item_preview_old")
 
 local c_key_w = hash("key_w")
 local c_key_a = hash("key_a")
@@ -46,7 +50,7 @@ local c_key_lshift = hash("key_lshift")
 local c_key_space = hash("key_space")
 local c_key_enter = hash("key_enter")
 
-local c_stats_list = { "health", "strength", "defense", "agility", "wonder", "terra" }
+local c_stats_list = { "vigor", "brawn", "guard", "speed", "sense", "terra" }
 local c_equipment_list = { "hands", "head", "torso", "trunk", "feet", "ring", "bracelet", "necklace" }
 
 --------------------------------------------------------------------------------
@@ -77,50 +81,87 @@ local p_swapping_item = false
 -- LOCAL FUNCTIONS
 --------------------------------------------------------------------------------
 
+local function get_consume_stats_dialog(item)
+	local result = "Stats <color=subtle>[Restore]<color=default><line>"
+	if item.vigor_restore ~= 0 then
+		result = result .. "<color=stat>Vigor<color=default> " .. item.vigor_restore .. " "
+	end
+	if item.brawn_restore ~= 0 then
+		result = result .. "<color=stat>Brawn<color=default> " .. item.brawn_restore .. " "
+	end
+	if item.guard_restore ~= 0 then
+		result = result .. "<color=stat>Guard<color=default> " .. item.guard_restore
+	end
+	result = result .. "<line>"
+	if item.speed_restore ~= 0 then
+		result = result .. "<color=stat>Speed<color=default> " .. item.speed_restore .. " "
+	end
+	if item.sense_restore ~= 0 then
+		result = result .. "<color=stat>Sense<color=default> " .. item.sense_restore .. " "
+	end
+	if item.terra_restore ~= 0 then
+		result = result .. "<color=stat>Terra<color=default> " .. item.terra_restore
+	end
+	result = result .. "<paragraph>Stats <color=subtle>[Buffer]<color=default><line>"
+	if item.vigor_buffer ~= 0 then
+		result = result .. "<color=stat>Vigor<color=default> " .. item.vigor_buffer .. " "
+	end
+	if item.brawn_buffer ~= 0 then
+		result = result .. "<color=stat>Brawn<color=default> " .. item.brawn_buffer .. " "
+	end
+	if item.guard_buffer ~= 0 then
+		result = result .. "<color=stat>Guard<color=default> " .. item.guard_buffer
+	end
+	result = result .. "<line>"
+	if item.speed_buffer ~= 0 then
+		result = result .. "<color=stat>Speed<color=default> " .. item.speed_buffer .. " "
+	end
+	if item.sense_buffer ~= 0 then
+		result = result .. "<color=stat>Sense<color=default> " .. item.sense_buffer .. " "
+	end
+	if item.terra_buffer ~= 0 then
+		result = result .. "<color=stat>Terra<color=default> " .. item.terra_buffer
+	end
+	return result
+end
+
+local function get_equip_stats_dialog(item)
+	local result = "Stats <color=subtle>[Equipment]<color=default><line>"
+	if item.vigor_equipment ~= 0 then
+		result = result .. "<color=stat>Vigor<color=default> " .. item.vigor_equipment .. " "
+	end
+	if item.brawn_equipment ~= 0 then
+		result = result .. "<color=stat>Brawn<color=default> " .. item.brawn_equipment .. " "
+	end
+	if item.guard_equipment ~= 0 then
+		result = result .. "<color=stat>Guard<color=default> " .. item.guard_equipment
+	end
+	result = result .. "<line>"
+	if item.speed_equipment ~= 0 then
+		result = result .. "<color=stat>Speed<color=default> " .. item.speed_equipment .. " "
+	end
+	if item.sense_equipment ~= 0 then
+		result = result .. "<color=stat>Sense<color=default> " .. item.sense_equipment .. " "
+	end
+	if item.terra_equipment ~= 0 then
+		result = result .. "<color=stat>Terra<color=default> " .. item.terra_equipment
+	end
+	return result
+end
+
 local function get_description_dialog(item)
-	return "<color=item>" .. item.name .. "<color=default><line>" .. item.description
+	local result = "<color=item>" .. item.name .. "<color=default><line>" .. item.description .. "<paragraph>"
+	if item.consume then
+		result = result .. get_consume_stats_dialog(item)
+	end
+	if item.equip then
+		result = result .. get_equip_stats_dialog(item)
+	end
+	return result
 end
 
 local function get_consume_dialog(player_name, item)
-	local result = "Consume <color=item>" .. item.name .. "<color=default> as <color=character>" .. player_name .. "<color=default>?<paragraph>"
-	if item.health_restore > 0 then
-		result = result .. "<color=stat>Health Restore<color=default> = " .. item.health_restore .. "<line>"
-	end
-	if item.health_buffer > 0 then
-		result = result .. "<color=stat>Health Buffer<color=default> = " .. item.health_buffer .. "<line>"
-	end
-	if item.strength_restore > 0 then
-		result = result .. "<color=stat>Strength Restore<color=default> = " .. item.strength_restore .. "<line>"
-	end
-	if item.strength_buffer > 0 then
-		result = result .. "<color=stat>Strength Buffer<color=default> = " .. item.strength_buffer .. "<line>"
-	end
-	if item.defense_restore > 0 then
-		result = result .. "<color=stat>Defense Restore<color=default> = " .. item.defense_restore .. "<line>"
-	end
-	if item.defense_buffer > 0 then
-		result = result .. "<color=stat>Defense Buffer<color=default> = " .. item.defense_buffer .. "<line>"
-	end
-	if item.agility_restore > 0 then
-		result = result .. "<color=stat>Agility Restore<color=default> = " .. item.agility_restore .. "<line>"
-	end
-	if item.agility_buffer > 0 then
-		result = result .. "<color=stat>Agility Buffer<color=default> = " .. item.agility_buffer .. "<line>"
-	end
-	if item.wonder_restore > 0 then
-		result = result .. "<color=stat>Wonder Restore<color=default> = " .. item.wonder_restore .. "<line>"
-	end
-	if item.wonder_buffer > 0 then
-		result = result .. "<color=stat>Wonder Buffer<color=default> = " .. item.wonder_buffer .. "<line>"
-	end
-	if item.terra_restore > 0 then
-		result = result .. "<color=stat>Terra Restore<color=default> = " .. item.terra_restore .. "<line>"
-	end
-	if item.terra_buffer > 0 then
-		result = result .. "<color=stat>Terra Buffer<color=default> = " .. item.terra_buffer .. "<line>"
-	end
-	result = string.sub(result, 1, #result - 6)
-	return result
+	return "Consume <color=item>" .. item.name .. "<color=default> as <color=character>" .. player_name .. "<color=default>?<paragraph>" .. get_consume_stats_dialog(item)
 end
 
 local function get_equip_dialog(player_name, item, equipped_item_name)
@@ -128,26 +169,7 @@ local function get_equip_dialog(player_name, item, equipped_item_name)
 	if equipped_item_name then
 		result = result .. "and unequip <color=item>" .. equipped_item_name .. "<color=default> "
 	end
-	result = result .. "as <color=character>" .. player_name .. "<color=default>?<paragraph>"
-	if item.health_equipment > 0 then
-		result = result .. "<color=stat>Health Equipment<color=default> = " .. item.health_equipment .. "<line>"
-	end
-	if item.strength_equipment > 0 then
-		result = result .. "<color=stat>Strength Equipment<color=default> = " .. item.strength_equipment .. "<line>"
-	end
-	if item.defense_equipment > 0 then
-		result = result .. "<color=stat>Defense Equipment<color=default> = " .. item.defense_equipment .. "<line>"
-	end
-	if item.agility_equipment > 0 then
-		result = result .. "<color=stat>Agility Equipment<color=default> = " .. item.agility_equipment .. "<line>"
-	end
-	if item.wonder_equipment > 0 then
-		result = result .. "<color=stat>Wonder Equipment<color=default> = " .. item.wonder_equipment .. "<line>"
-	end
-	if item.terra_equipment > 0 then
-		result = result .. "<color=stat>Terra Equipment<color=default> = " .. item.terra_equipment .. "<line>"
-	end
-	result = string.sub(result, 1, #result - 6)
+	result = result .. "as <color=character>" .. player_name .. "<color=default>?<paragraph>" .. get_equip_stats_dialog(item)
 	return result
 end
 
@@ -175,14 +197,21 @@ end
 local function refresh_inventory()
 	p_inventory = m_persist.get_inventory()
 	local floor_index, ceil_index = get_inventory_section_bounds()
+	local gui_get_node = gui.get_node
+	local gui_set_enabled = gui.set_enabled
+	local gui_play_flipbook = gui.play_flipbook
+	local gui_set_text = gui.set_text
 	for i = 1, #p_inventory do
-		local node = gui.get_node(hash("item_" .. i))
-		if floor_index <= i and i <= ceil_index and p_inventory[i] then
-			gui.set_enabled(node, true)
-			local animation = p_inventory[i].key .. "_idle"
-			gui.play_flipbook(node, animation)
+		local item = p_inventory[i]
+		local node_item = gui_get_node(hash("item_" .. i))
+		local node_count = gui_get_node(hash("count_" .. i))
+		if floor_index <= i and i <= ceil_index and item then
+			gui_set_enabled(node_item, true)
+			gui_play_flipbook(node_item, item.key)
+			gui_set_text(node_count, item.count > 1 and item.count or "")
 		else
-			gui.set_enabled(node, false)
+			gui_set_enabled(node_item, false)
+			gui_set_text(node_count, "")
 		end
 	end
 end
@@ -239,11 +268,10 @@ local function refresh_stats_consume()
 		local buffer_value_new = buffer_value_old + item[stat_key .. "_buffer"]
 		refresh_stat_dynamic(stat_key, "_buffer", buffer_value_old, buffer_value_new)
 		local total_value_old = player[stat_key .. "_total"]
-		local total_value_new = total_value_old + buffer_value_new
+		local total_value_new = math.max(1, total_value_old + buffer_value_new - buffer_value_old)
 		refresh_stat_dynamic(stat_key, "_total", total_value_old, total_value_new)
 		local current_value_old = player[stat_key .. "_current"]
-		local current_value_new = current_value_old + buffer_value_new - buffer_value_old
-		current_value_new = math.min(current_value_new + item[stat_key .. "_restore"], total_value_new)
+		local current_value_new = math.max(1, math.min(current_value_old + buffer_value_new - buffer_value_old + item[stat_key .. "_restore"], total_value_new))
 		refresh_stat_dynamic(stat_key, "_current", current_value_old, current_value_new)
 	end
 	local player_name = m_character[player.key].name
@@ -267,11 +295,11 @@ local function refresh_stats_equip()
 		refresh_stat_dynamic(stat_key, "_equipment", equipment_value_old, equipment_value_new)
 		local buffer_value = player[stat_key .. "_buffer"]
 		refresh_stat_static(stat_key, "_buffer", buffer_value)
-		local total_value_old = buffer_value + equipment_value_old + level_value
-		local total_value_new = buffer_value + equipment_value_new + level_value
+		local total_value_old = player[stat_key .. "_total"]
+		local total_value_new = math.max(1, buffer_value + equipment_value_new + level_value)
 		refresh_stat_dynamic(stat_key, "_total", total_value_old, total_value_new)
 		local current_value_old = player[stat_key .. "_current"]
-		local current_value_new = current_value_old + equipment_value_new - equipment_value_old
+		local current_value_new = math.max(1, math.min(current_value_old + equipment_value_new - equipment_value_old, total_value_new))
 		refresh_stat_dynamic(stat_key, "_current", current_value_old, current_value_new)
 	end
 	local player_name = m_character[player.key].name
@@ -299,15 +327,14 @@ local function select_inventory_index_noswap(index)
 	end
 	if p_inventory[p_inventory_index] then
 		local previous_node = gui.get_node(hash("item_" .. p_inventory_index))
-		gui.play_flipbook(previous_node, p_inventory[p_inventory_index].key .. "_idle")
+		gui.play_flipbook(previous_node, p_inventory[p_inventory_index].key)
 	end
 	set_inventory_index(index)
 	local next_node = gui.get_node(hash("item_" .. p_inventory_index))
 	if p_inventory[p_inventory_index] then
-		local next_item_key = p_inventory[p_inventory_index].key
-		local next_item = m_item[next_item_key]
-		gui.play_flipbook(next_node, next_item_key .. "_active")
-		local dialog = get_description_dialog(next_item)
+		local next_item_inventory = p_inventory[p_inventory_index]
+		local next_item_data = m_item[next_item_inventory.key]
+		local dialog = get_description_dialog(next_item_data)
 		m_dtypewriter.load(dialog)
 		m_dtypewriter.start()
 	end
@@ -320,9 +347,6 @@ local function select_inventory_index_swap(index)
 	refresh_inventory()
 	set_inventory_index(index)
 	local next_node = gui.get_node(hash("item_" .. p_inventory_index))
-	local next_item_key = p_inventory[p_inventory_index].key
-	local next_item = m_item[next_item_key]
-	gui.play_flipbook(next_node, next_item_key .. "_active")
 	local selector_node = gui.get_node(c_selector)
 	gui.set_position(selector_node, gui.get_position(next_node))
 end
@@ -395,10 +419,26 @@ local function toggle_party_background(flag)
 	gui.set_enabled(node_party_background, flag)
 	local node_stats_background = gui.get_node(c_stats_background)
 	gui.set_enabled(node_stats_background, flag)
+	local node_item_background = gui.get_node(c_item_background)
+	gui.set_enabled(node_item_background, flag)
 	if flag then
 		local node_player = gui.get_node(hash("party_" .. p_party_index))
 		gui.set_color(node_player, m_dcolors.palette.brown_4)
 		select_party_index(1)
+		local node_item_preview_new = gui.get_node(c_item_preview_new)
+		gui.set_position(node_item_preview_new, vmath.vector3(0, -8, 0))
+		local node_item_preview_arrow = gui.get_node(c_item_preview_arrow)
+		gui.set_enabled(node_item_preview_arrow, false)
+		local node_item_preview_old = gui.get_node(c_item_preview_old)
+		gui.set_enabled(node_item_preview_old, false)
+		if p_action_ids[p_action_index] == c_equip then
+			local equipped_key = p_party[p_party_index][m_item[p_inventory[p_inventory_index].key].equip_key .. "_key"]
+			if equipped_key then
+				gui.set_position(node_item_preview_new, vmath.vector3(-18, -8, 0))
+				gui.set_enabled(node_item_preview_arrow, true)
+				gui.set_enabled(node_item_preview_old, true)
+			end
+		end
 	else
 		cancel_timer_handles()
 		select_inventory_index(p_inventory_index)
@@ -460,7 +500,9 @@ end
 function on_input(self, action_id, action)
 	if action.pressed then
 		if action_id == c_key_space then
-			if m_dtypewriter.is_waiting() then
+			if m_dtypewriter.is_typing() then
+				m_dtypewriter.skip()
+			elseif m_dtypewriter.is_waiting() then
 				m_dtypewriter.continue()
 			elseif m_dtypewriter.is_complete() then
 				m_dtypewriter.restart()

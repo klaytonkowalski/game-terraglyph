@@ -267,9 +267,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "stick_idle"
+  id: "stick"
   images {
-    image: "/assets/images/gui_stick_0.png"
+    image: "/assets/images/gui_stick.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
@@ -278,43 +278,13 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "stick_active"
+  id: "apple"
   images {
-    image: "/assets/images/gui_stick_1.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
-  images {
-    image: "/assets/images/gui_stick_0.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 2
-  flip_horizontal: 0
-  flip_vertical: 0
-}
-animations {
-  id: "apple_idle"
-  images {
-    image: "/assets/images/gui_apple_0.png"
+    image: "/assets/images/gui_apple.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_NONE
   fps: 0
-  flip_horizontal: 0
-  flip_vertical: 0
-}
-animations {
-  id: "apple_active"
-  images {
-    image: "/assets/images/gui_apple_1.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
-  images {
-    image: "/assets/images/gui_apple_0.png"
-    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-  }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 2
   flip_horizontal: 0
   flip_vertical: 0
 }
